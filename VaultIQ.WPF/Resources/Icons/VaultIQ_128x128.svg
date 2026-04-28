@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <title>VaultIQ — 128x128</title>
+
+  <!-- Background -->
+  <rect width="128" height="128" rx="26" fill="#0C1E3A" />
+
+  <!-- Top light -->
+  <rect x="1" y="1" width="126" height="63" rx="26"
+        fill="#112236" opacity="0.35" />
+
+  <!-- Vault frame -->
+  <rect x="28" y="22" width="82" height="60" rx="14"
+        fill="none" stroke="#378ADD" stroke-width="7" />
+  <rect x="28" y="22" width="82" height="60" rx="14"
+        fill="none" stroke="#5DCAA5" stroke-width="1" opacity="0.2" />
+
+  <!-- Body -->
+  <rect x="44" y="78" width="50" height="36" rx="9" fill="#378ADD" />
+
+  <!-- Lock -->
+  <circle cx="69" cy="96" r="8" fill="#0C1E3A" />
+  <rect x="65.5" y="96" width="7" height="12" rx="2.5" fill="#0C1E3A" />
+
+  <!-- IQ badge -->
+  <rect x="82" y="62" width="34" height="22" rx="7" fill="#1D9E75" />
+
+  <!-- Centered text (fixed) -->
+  <text x="99" y="73"
+        text-anchor="middle"
+        font-family="Georgia, serif"
+        font-size="13"
+        font-weight="700"
+        fill="#E1F5EE">
+    IQ
+  </text>
+</svg>

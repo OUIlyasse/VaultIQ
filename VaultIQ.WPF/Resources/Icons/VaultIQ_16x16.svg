@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <title>VaultIQ — 16x16</title>
+
+  <!-- Background -->
+  <rect width="16" height="16" rx="3" fill="#185FA5" />
+
+  <!-- Centered text -->
+  <text x="8" y="8"
+        text-anchor="middle"
+        dominant-baseline="middle"
+        font-family="Segoe UI, Arial, sans-serif"
+        font-size="9"
+        font-weight="700"
+        fill="#FFFFFF">
+    V
+  </text>
+</svg>

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <title>VaultIQ — Favicon 32x32</title>
+
+  <!-- Background -->
+  <rect width="32" height="32" rx="6" fill="#0C1E3A" />
+
+  <!-- Vault top -->
+  <rect x="5" y="4" width="20" height="14" rx="4"
+        fill="none" stroke="#378ADD" stroke-width="2.5" />
+
+  <!-- Body -->
+  <rect x="9" y="16" width="12" height="9" rx="3" fill="#378ADD" />
+
+  <!-- Lock -->
+  <circle cx="15" cy="20" r="2" fill="#0C1E3A" />
+
+  <!-- IQ badge -->
+  <rect x="19" y="12" width="8" height="6" rx="2" fill="#1D9E75" />
+
+  <!-- Centered text (fixed) -->
+  <text x="23" y="15.5"
+        text-anchor="middle"
+        font-family="Georgia, serif"
+        font-size="4"
+        font-weight="700"
+        fill="#E1F5EE">
+    IQ
+  </text>
+</svg>

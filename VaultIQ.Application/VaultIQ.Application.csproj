@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VaultIQ.Domain\VaultIQ.Domain.csproj" />
+    <ProjectReference Include="..\VaultIQ.Shared\VaultIQ.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Commands\ChangePassword\" />
+    <Folder Include="Commands\DeleteEntry\" />
+    <Folder Include="Commands\DeleteGroup\" />
+    <Folder Include="Commands\DuplicateEntry\" />
+    <Folder Include="Commands\LockDatabase\" />
+    <Folder Include="Commands\MoveEntry\" />
+    <Folder Include="Commands\SaveGroup\" />
+    <Folder Include="Commands\UnlockDatabase\" />
+    <Folder Include="Queries\GetAllEntries\" />
+    <Folder Include="Queries\GetExpiringEntries\" />
+    <Folder Include="Queries\GetFileHeader\" />
+    <Folder Include="Queries\GetRecentFiles\" />
+    <Folder Include="Queries\SearchEntries\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.10.0" />
+    <PackageReference Include="MediatR" Version="12.4.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+  </ItemGroup>
+
+</Project>
