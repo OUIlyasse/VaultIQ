@@ -1,17 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.37216.2 d17.14
+VisualStudioVersion = 17.14.37216.2
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VaultIQ.WPF", "VaultIQ.WPF\VaultIQ.WPF.csproj", "{D3C8EB72-6F73-4FF9-A944-F545097CCE60}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VaultIQ.Application", "VaultIQ.Application\VaultIQ.Application.csproj", "{0458E34E-1E13-4ACB-B08D-1A289CEC802D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VaultIQ.Core", "VaultIQ.Core\VaultIQ.Core.csproj", "{D0693EE7-D131-4965-A1E8-C1BDE0F8D4DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VaultIQ.Domain", "VaultIQ.Domain\VaultIQ.Domain.csproj", "{DDF84B47-5282-43A4-AF81-39AE0BBC86D2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VaultIQ.Infrastructure", "VaultIQ.Infrastructure\VaultIQ.Infrastructure.csproj", "{292389F9-EBB2-4369-B881-8A2AF9BB815E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VaultIQ.Shared", "VaultIQ.Shared\VaultIQ.Shared.csproj", "{A6E9DEDD-0770-4FAF-BF04-A4C6CCE8933E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VaultIQ.Console", "VaultIQ.Console\VaultIQ.Console.csproj", "{746AFA23-44DA-4CE8-896E-F65DBDCD09F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,22 +19,14 @@ Global
 		{D3C8EB72-6F73-4FF9-A944-F545097CCE60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3C8EB72-6F73-4FF9-A944-F545097CCE60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3C8EB72-6F73-4FF9-A944-F545097CCE60}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0458E34E-1E13-4ACB-B08D-1A289CEC802D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0458E34E-1E13-4ACB-B08D-1A289CEC802D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0458E34E-1E13-4ACB-B08D-1A289CEC802D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0458E34E-1E13-4ACB-B08D-1A289CEC802D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DDF84B47-5282-43A4-AF81-39AE0BBC86D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DDF84B47-5282-43A4-AF81-39AE0BBC86D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DDF84B47-5282-43A4-AF81-39AE0BBC86D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DDF84B47-5282-43A4-AF81-39AE0BBC86D2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{292389F9-EBB2-4369-B881-8A2AF9BB815E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{292389F9-EBB2-4369-B881-8A2AF9BB815E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{292389F9-EBB2-4369-B881-8A2AF9BB815E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{292389F9-EBB2-4369-B881-8A2AF9BB815E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A6E9DEDD-0770-4FAF-BF04-A4C6CCE8933E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A6E9DEDD-0770-4FAF-BF04-A4C6CCE8933E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A6E9DEDD-0770-4FAF-BF04-A4C6CCE8933E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A6E9DEDD-0770-4FAF-BF04-A4C6CCE8933E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0693EE7-D131-4965-A1E8-C1BDE0F8D4DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0693EE7-D131-4965-A1E8-C1BDE0F8D4DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0693EE7-D131-4965-A1E8-C1BDE0F8D4DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0693EE7-D131-4965-A1E8-C1BDE0F8D4DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{746AFA23-44DA-4CE8-896E-F65DBDCD09F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{746AFA23-44DA-4CE8-896E-F65DBDCD09F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{746AFA23-44DA-4CE8-896E-F65DBDCD09F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{746AFA23-44DA-4CE8-896E-F65DBDCD09F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

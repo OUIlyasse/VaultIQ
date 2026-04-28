@@ -1,0 +1,315 @@
+﻿<Window
+    x:Class="VaultIQ.WPF.Views.PinDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="VaultIQ — Accès rapide par PIN"
+    Width="380"
+    AllowsTransparency="True"
+    Background="Transparent"
+    ResizeMode="NoResize"
+    SizeToContent="Height"
+    WindowStartupLocation="CenterOwner"
+    WindowStyle="None">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="Midnight" Color="#070E1C" />
+        <SolidColorBrush x:Key="Panel" Color="#0F2035" />
+        <SolidColorBrush x:Key="Blue" Color="#185FA5" />
+        <SolidColorBrush x:Key="Accent" Color="#378ADD" />
+        <SolidColorBrush x:Key="Border1" Color="#26378ADD" />
+        <SolidColorBrush x:Key="Border2" Color="#47378ADD" />
+        <SolidColorBrush x:Key="Text1" Color="#D4E4F7" />
+        <SolidColorBrush x:Key="Text2" Color="#7BA3C8" />
+        <SolidColorBrush x:Key="Text3" Color="#3D6080" />
+        <SolidColorBrush x:Key="Teal2" Color="#12D68C" />
+        <SolidColorBrush x:Key="Green" Color="#22C55E" />
+        <SolidColorBrush x:Key="Amber" Color="#F59E0B" />
+
+        <!--  PIN box style  -->
+        <Style x:Key="PinBox" TargetType="PasswordBox">
+            <Setter Property="Width" Value="44" />
+            <Setter Property="Height" Value="44" />
+            <Setter Property="Background" Value="{StaticResource Panel}" />
+            <Setter Property="Foreground" Value="{StaticResource Accent}" />
+            <Setter Property="BorderBrush" Value="{StaticResource Border2}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="FontFamily" Value="Consolas" />
+            <Setter Property="FontSize" Value="22" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="MaxLength" Value="1" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="PasswordBox">
+                        <Border
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="7">
+                            <ScrollViewer
+                                x:Name="PART_ContentHost"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="BorderBrush" Value="{StaticResource Accent}" />
+                                <Setter Property="Background" Value="#14378ADD" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="BtnCancel" TargetType="Button">
+            <Setter Property="Height" Value="34" />
+            <Setter Property="Padding" Value="16,0" />
+            <Setter Property="Background" Value="{StaticResource Panel}" />
+            <Setter Property="Foreground" Value="{StaticResource Text2}" />
+            <Setter Property="BorderBrush" Value="{StaticResource Border1}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style
+            x:Key="BtnPrimary"
+            BasedOn="{StaticResource BtnCancel}"
+            TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource Blue}" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="{StaticResource Blue}" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1E72BB" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Border
+        Background="{StaticResource Midnight}"
+        BorderBrush="{StaticResource Border2}"
+        BorderThickness="1"
+        CornerRadius="12">
+        <Border.Effect>
+            <DropShadowEffect
+                BlurRadius="60"
+                Opacity="0.8"
+                ShadowDepth="10"
+                Color="#000000" />
+        </Border.Effect>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!--  ── HEADER ───────────────────────────────────  -->
+            <Border
+                Grid.Row="0"
+                Padding="18,14"
+                CornerRadius="12,12,0,0"
+                MouseLeftButtonDown="Header_MouseLeftButtonDown">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Offset="0" Color="#185FA5" />
+                        <GradientStop Offset="1" Color="#0C3360" />
+                    </LinearGradientBrush>
+                </Border.Background>
+                <StackPanel>
+                    <TextBlock
+                        FontSize="15"
+                        FontWeight="SemiBold"
+                        Foreground="White"
+                        Text="🔢 Accès rapide par PIN" />
+                    <TextBlock
+                        Margin="0,3,0,0"
+                        FontSize="11"
+                        Foreground="#8CFFFFFF"
+                        Text="Code PIN 4–8 chiffres (≠ du mot de passe principal)" />
+                </StackPanel>
+            </Border>
+
+            <!--  ── BODY ─────────────────────────────────────  -->
+            <StackPanel Grid.Row="1" Margin="18">
+
+                <!--  Description  -->
+                <TextBlock
+                    Margin="0,0,0,14"
+                    FontSize="12"
+                    Foreground="{StaticResource Text2}"
+                    LineHeight="19"
+                    TextWrapping="Wrap">
+                    Le PIN vous permet de déverrouiller rapidement sans re-saisir le mot de passe complet. Après<Run FontWeight="SemiBold" Foreground="{StaticResource Text1}">5 tentatives échouées</Run>
+                    ,
+                    la base est bloquée 30 minutes.</TextBlock>
+
+                <!--  PIN boxes (up to 8; 4 mandatory shown + extras)  -->
+                <StackPanel
+                    Margin="0,0,0,8"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+                    <PasswordBox
+                        x:Name="Pin1"
+                        Margin="0,0,8,0"
+                        GotFocus="PinBox_GotFocus"
+                        PasswordChanged="PinBox_Changed"
+                        Style="{StaticResource PinBox}" />
+                    <PasswordBox
+                        x:Name="Pin2"
+                        Margin="0,0,8,0"
+                        GotFocus="PinBox_GotFocus"
+                        PasswordChanged="PinBox_Changed"
+                        Style="{StaticResource PinBox}" />
+                    <PasswordBox
+                        x:Name="Pin3"
+                        Margin="0,0,8,0"
+                        GotFocus="PinBox_GotFocus"
+                        PasswordChanged="PinBox_Changed"
+                        Style="{StaticResource PinBox}" />
+                    <PasswordBox
+                        x:Name="Pin4"
+                        Margin="0,0,8,0"
+                        GotFocus="PinBox_GotFocus"
+                        PasswordChanged="PinBox_Changed"
+                        Style="{StaticResource PinBox}" />
+                    <PasswordBox
+                        x:Name="Pin5"
+                        Margin="0,0,8,0"
+                        GotFocus="PinBox_GotFocus"
+                        PasswordChanged="PinBox_Changed"
+                        Style="{StaticResource PinBox}" />
+                    <PasswordBox
+                        x:Name="Pin6"
+                        GotFocus="PinBox_GotFocus"
+                        PasswordChanged="PinBox_Changed"
+                        Style="{StaticResource PinBox}" />
+                </StackPanel>
+
+                <!--  Counter hint  -->
+                <TextBlock
+                    x:Name="PinCounterText"
+                    Margin="0,0,0,10"
+                    HorizontalAlignment="Center"
+                    FontSize="11"
+                    Foreground="{StaticResource Text3}"
+                    Text="0 / 6 chiffres · 6+ chiffres = excellent" />
+
+                <!--  Strength bar  -->
+                <Grid
+                    x:Name="PinStrengthContainer"
+                    Height="4"
+                    Margin="0,0,0,4">
+                    <Border Background="{StaticResource Panel}" CornerRadius="2" />
+                    <Border
+                        x:Name="PinStrengthFill"
+                        Width="0"
+                        HorizontalAlignment="Left"
+                        Background="{StaticResource Amber}"
+                        CornerRadius="2" />
+                </Grid>
+                <DockPanel Margin="0,0,0,14">
+                    <TextBlock
+                        x:Name="PinStrengthLabel"
+                        FontSize="10"
+                        Foreground="{StaticResource Amber}" />
+                    <TextBlock
+                        HorizontalAlignment="Right"
+                        DockPanel.Dock="Right"
+                        FontSize="10"
+                        Foreground="{StaticResource Text3}"
+                        Text="6+ = très bon" />
+                </DockPanel>
+
+                <!--  Security info  -->
+                <Border
+                    Padding="12,9"
+                    Background="{StaticResource Panel}"
+                    BorderBrush="{StaticResource Border1}"
+                    BorderThickness="1"
+                    CornerRadius="7">
+                    <StackPanel>
+                        <DockPanel Margin="0,0,0,3">
+                            <TextBlock
+                                DockPanel.Dock="Left"
+                                FontSize="10"
+                                Foreground="{StaticResource Text3}"
+                                Text="Stockage" />
+                            <TextBlock
+                                HorizontalAlignment="Right"
+                                DockPanel.Dock="Right"
+                                FontFamily="Consolas"
+                                FontSize="10"
+                                Foreground="{StaticResource Teal2}"
+                                Text="Hash PBKDF2 — jamais en clair" />
+                        </DockPanel>
+                        <DockPanel>
+                            <TextBlock
+                                DockPanel.Dock="Left"
+                                FontSize="10"
+                                Foreground="{StaticResource Text3}"
+                                Text="Tentatives max" />
+                            <TextBlock
+                                HorizontalAlignment="Right"
+                                DockPanel.Dock="Right"
+                                FontFamily="Consolas"
+                                FontSize="10"
+                                Foreground="{StaticResource Text2}"
+                                Text="5 avant blocage 30 min" />
+                        </DockPanel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!--  ── BUTTONS ───────────────────────────────────  -->
+            <Border
+                Grid.Row="2"
+                Padding="18,12"
+                Background="{StaticResource Panel}"
+                BorderBrush="{StaticResource Border1}"
+                BorderThickness="0,1,0,0"
+                CornerRadius="0,0,12,12">
+                <DockPanel LastChildFill="False">
+                    <Button
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Click="SkipBtn_Click"
+                        Content="Passer cette étape"
+                        Cursor="Hand"
+                        DockPanel.Dock="Left"
+                        FontSize="11"
+                        Foreground="{StaticResource Text3}" />
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                        <Button
+                            Margin="0,0,8,0"
+                            Click="BackBtn_Click"
+                            Content="Retour"
+                            Style="{StaticResource BtnCancel}" />
+                        <Button
+                            x:Name="NextBtn"
+                            Click="NextBtn_Click"
+                            Content="Suivant →"
+                            IsEnabled="False"
+                            Style="{StaticResource BtnPrimary}" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

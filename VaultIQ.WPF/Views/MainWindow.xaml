@@ -1,13 +1,643 @@
 ﻿<Window
-    x:Class="VaultIQ.WPF.MainWindow"
+    x:Class="VaultIQ.WPF.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:VaultIQ.WPF"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="MainWindow"
-    Width="800"
-    Height="450"
-    mc:Ignorable="d">
-    <Grid />
+    xmlns:conv="clr-namespace:VaultIQ.WPF.Converters"
+    Title="{Binding WindowTitle}"
+    Width="1020"
+    Height="660"
+    MinWidth="820"
+    MinHeight="520"
+    Background="{StaticResource NavyBrush}">
+
+    <Window.Resources>
+        <!--  ── Couleurs ─────────────────────────────────────  -->
+        <SolidColorBrush x:Key="Navy" Color="#0C1E3A" />
+        <SolidColorBrush x:Key="Midnight" Color="#070E1C" />
+        <SolidColorBrush x:Key="Mid" Color="#132944" />
+        <SolidColorBrush x:Key="Panel" Color="#0F2035" />
+        <SolidColorBrush x:Key="Blue" Color="#185FA5" />
+        <SolidColorBrush x:Key="Accent" Color="#378ADD" />
+        <SolidColorBrush x:Key="Teal" Color="#1D9E75" />
+        <SolidColorBrush x:Key="Teal2" Color="#12D68C" />
+        <SolidColorBrush x:Key="Border1" Color="#26378ADD" />
+        <SolidColorBrush x:Key="Border2" Color="#47378ADD" />
+        <SolidColorBrush x:Key="Text1" Color="#D4E4F7" />
+        <SolidColorBrush x:Key="Text2" Color="#7BA3C8" />
+        <SolidColorBrush x:Key="Text3" Color="#3D6080" />
+        <SolidColorBrush x:Key="Green" Color="#22C55E" />
+        <SolidColorBrush x:Key="Amber" Color="#F59E0B" />
+        <SolidColorBrush x:Key="Red" Color="#EF4444" />
+        <SolidColorBrush x:Key="Selected" Color="#2E378ADD" />
+        <SolidColorBrush x:Key="AppBg" Color="#050C18" />
+
+        <!--  ── Style : bouton toolbar générique ───────────  -->
+        <Style x:Key="ToolbarBtn" TargetType="Button">
+            <Setter Property="Width" Value="32" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{StaticResource Text2}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            x:Name="bdr"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bdr" Property="Background" Value="#1E378ADD" />
+                                <Setter TargetName="bdr" Property="BorderBrush" Value="{StaticResource Border2}" />
+                                <Setter Property="Foreground" Value="{StaticResource Text1}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--  ── Style : bouton toolbar primaire (bleu) ─────  -->
+        <Style
+            x:Key="ToolbarBtnPrimary"
+            BasedOn="{StaticResource ToolbarBtn}"
+            TargetType="Button">
+            <Setter Property="Background" Value="#185FA5" />
+            <Setter Property="BorderBrush" Value="#185FA5" />
+            <Setter Property="Foreground" Value="White" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1E72BB" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!--  ── Style : bouton toolbar teal ────────────────  -->
+        <Style
+            x:Key="ToolbarBtnTeal"
+            BasedOn="{StaticResource ToolbarBtn}"
+            TargetType="Button">
+            <Setter Property="Background" Value="#261D9E75" />
+            <Setter Property="BorderBrush" Value="#661D9E75" />
+            <Setter Property="Foreground" Value="{StaticResource Teal2}" />
+        </Style>
+
+        <!--  ── Style : élément de menu bar ────────────────  -->
+        <Style x:Key="MenuBarItem" TargetType="Button">
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Padding" Value="10,0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{StaticResource Text2}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            x:Name="bdr"
+                            Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="4">
+                            <ContentPresenter VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bdr" Property="Background" Value="#1A378ADD" />
+                                <Setter Property="Foreground" Value="{StaticResource Text1}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--  ── Style : élément actif du menu bar ───────────  -->
+        <Style
+            x:Key="MenuBarItemActive"
+            BasedOn="{StaticResource MenuBarItem}"
+            TargetType="Button">
+            <Setter Property="Background" Value="#185FA5" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+
+        <!--  ── Style : ligne sidebar ───────────────────────  -->
+        <Style x:Key="SidebarItem" TargetType="Border">
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+
+        <!--  ── Style : bouton action panneau détail ────────  -->
+        <Style x:Key="ActionBtn" TargetType="Button">
+            <Setter Property="Height" Value="28" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--  ── Style : petits boutons copier ───────────────  -->
+        <Style x:Key="CopyBtn" TargetType="Button">
+            <Setter Property="Width" Value="22" />
+            <Setter Property="Height" Value="22" />
+            <Setter Property="Background" Value="{StaticResource Panel}" />
+            <Setter Property="Foreground" Value="{StaticResource Text3}" />
+            <Setter Property="BorderBrush" Value="{StaticResource Border1}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#185FA5" />
+                                <Setter Property="Foreground" Value="White" />
+                                <Setter Property="BorderBrush" Value="#185FA5" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--  ── Style : TextBox recherche ───────────────────  -->
+        <Style x:Key="SearchBox" TargetType="TextBox">
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Background" Value="#0AFFFFFF" />
+            <Setter Property="Foreground" Value="{StaticResource Text1}" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="BorderBrush" Value="{StaticResource Border1}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="28,0,8,0" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6">
+                            <ScrollViewer
+                                x:Name="PART_ContentHost"
+                                Margin="{TemplateBinding Padding}"
+                                VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="BorderBrush" Value="{StaticResource Accent}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <!--  ══ Ressources locales ════════════════════════════════════════  -->
+    <!--<Window.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
+        <conv:NullToVisibilityConverter x:Key="NullToVis" />
+        <conv:MaskPasswordConverter x:Key="MaskPass" />
+        <conv:StrengthToColorConverter x:Key="StrColor" />
+        <conv:DateConverter x:Key="DateFmt" />
+    </Window.Resources>-->
+
+    <!--
+        ══ Raccourcis clavier globaux ════════════════════════════════
+        Chaque KeyBinding lie le raccourci à la commande du ViewModel.
+        La commande gère elle-même le CanExecute (bouton grisé + raccourci ignoré si désactivé).
+        ══════════════════════════════════════════════════════════════════
+    -->
+    <Window.InputBindings>
+        <!--  Groupe Fichier  -->
+        <KeyBinding
+            Key="N"
+            Command="{Binding NewDatabaseCommand}"
+            Modifiers="Ctrl" />
+        <KeyBinding
+            Key="O"
+            Command="{Binding OpenDatabaseCommand}"
+            Modifiers="Ctrl" />
+        <KeyBinding
+            Key="S"
+            Command="{Binding SaveDatabaseCommand}"
+            Modifiers="Ctrl" />
+        <!--  Groupe Entrées  -->
+        <KeyBinding
+            Key="I"
+            Command="{Binding AddEntryCommand}"
+            Modifiers="Ctrl" />
+        <KeyBinding
+            Key="E"
+            Command="{Binding EditEntryCommand}"
+            Modifiers="Ctrl" />
+        <KeyBinding
+            Key="D"
+            Command="{Binding DuplicateEntryCommand}"
+            Modifiers="Ctrl" />
+        <KeyBinding Key="Delete" Command="{Binding DeleteEntryCommand}" />
+        <!--  Groupe Presse-papier  -->
+        <KeyBinding
+            Key="B"
+            Command="{Binding CopyUsernameCommand}"
+            Modifiers="Ctrl" />
+        <KeyBinding
+            Key="C"
+            Command="{Binding CopyPasswordCommand}"
+            Modifiers="Ctrl+Shift" />
+        <KeyBinding
+            Key="U"
+            Command="{Binding OpenUrlCommand}"
+            Modifiers="Ctrl" />
+        <!--  Groupe Outils  -->
+        <KeyBinding
+            Key="G"
+            Command="{Binding OpenGeneratorCommand}"
+            Modifiers="Ctrl" />
+        <KeyBinding
+            Key="L"
+            Command="{Binding LockCommand}"
+            Modifiers="Ctrl" />
+        <!--  Recherche  -->
+        <KeyBinding
+            Key="F"
+            Command="{Binding FocusSearchCommand}"
+            Modifiers="Ctrl" />
+    </Window.InputBindings>
+
+    <!--  ══ Mise en page principale ═══════════════════════════════════  -->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="44" />
+            <!--  Toolbar  -->
+            <RowDefinition Height="*" />
+            <!--  Contenu principal  -->
+            <RowDefinition Height="24" />
+            <!--  Barre de statut  -->
+        </Grid.RowDefinitions>
+
+        <!--
+            ═══════════════════════════════════════════════════════════
+            TOOLBAR — 4 groupes séparés par des séparateurs visuels
+            Chaque bouton :
+            • Style="{StaticResource ToolbarBtn}" (ou Primary/Teal)
+            • Command="{Binding XxxCommand}"  ← lie au ViewModel
+            • ToolTip="Description  Ctrl+X"  ← affiché au survol
+            • Content = emoji (rendu natif Windows)
+            ═══════════════════════════════════════════════════════════════
+        -->
+        <Grid Grid.Row="0" Background="{StaticResource ToolbarBgBrush}">
+            <StackPanel Margin="8,6" Orientation="Horizontal">
+
+                <!--  ── Groupe 1 : Gestion de fichier ───────────────  -->
+                <Button
+                    Margin="0,0,3,0"
+                    Command="{Binding NewDatabaseCommand}"
+                    Style="{StaticResource ToolbarBtn}"
+                    ToolTip="Nouvelle base de données  Ctrl+N">
+                    📄
+                </Button>
+                <Button
+                    Margin="0,0,3,0"
+                    Command="{Binding OpenDatabaseCommand}"
+                    Style="{StaticResource ToolbarBtn}"
+                    ToolTip="Ouvrir un fichier .viq existant  Ctrl+O">
+                    📂
+                </Button>
+                <Button
+                    Margin="0,0,3,0"
+                    Command="{Binding SaveDatabaseCommand}"
+                    Style="{StaticResource ToolbarBtn}"
+                    ToolTip="Enregistrer la base ouverte  Ctrl+S">
+                    💾
+                </Button>
+
+                <Separator Style="{StaticResource ToolbarSep}" />
+
+                <!--  ── Groupe 2 : CRUD entrées ────────────────────  -->
+                <Button
+                    Margin="0,0,3,0"
+                    Command="{Binding AddEntryCommand}"
+                    Style="{StaticResource ToolbarBtnPrimary}"
+                    ToolTip="Ajouter une entrée dans le groupe sélectionné  Ctrl+I">
+                    ➕
+                </Button>
+                <Button
+                    Margin="0,0,3,0"
+                    Command="{Binding EditEntryCommand}"
+                    Style="{StaticResource ToolbarBtn}"
+                    ToolTip="Modifier l'entrée sélectionnée  Ctrl+E">
+                    ✏️
+                </Button>
+                <Button
+                    Margin="0,0,3,0"
+                    Command="{Binding DuplicateEntryCommand}"
+                    Style="{StaticResource ToolbarBtn}"
+                    ToolTip="Dupliquer l'entrée sélectionnée  Ctrl+D">
+                    📋
+                </Button>
+                <Button
+                    Margin="0,0,3,0"
+                    Command="{Binding DeleteEntryCommand}"
+                    Style="{StaticResource ToolbarBtn}"
+                    ToolTip="Supprimer l'entrée sélectionnée  Suppr">
+                    🗑
+                </Button>
+
+                <Separator Style="{StaticResource ToolbarSep}" />
+
+                <!--  ── Groupe 3 : Presse-papier ───────────────────  -->
+                <Button
+                    Margin="0,0,3,0"
+                    Command="{Binding CopyUsernameCommand}"
+                    Style="{StaticResource ToolbarBtn}"
+                    ToolTip="Copier l'identifiant  Ctrl+B">
+                    👤
+                </Button>
+                <Button
+                    Margin="0,0,3,0"
+                    Command="{Binding CopyPasswordCommand}"
+                    Style="{StaticResource ToolbarBtn}"
+                    ToolTip="Copier le mot de passe&#x0a;Effacement automatique du presse-papier après 15 s  Ctrl+Maj+C">
+                    🔑
+                </Button>
+                <Button
+                    Margin="0,0,3,0"
+                    Command="{Binding OpenUrlCommand}"
+                    Style="{StaticResource ToolbarBtn}"
+                    ToolTip="Ouvrir l'URL dans le navigateur par défaut  Ctrl+U">
+                    🌐
+                </Button>
+
+                <Separator Style="{StaticResource ToolbarSep}" />
+
+                <!--  ── Groupe 4 : Outils ──────────────────────────  -->
+                <Button
+                    Margin="0,0,3,0"
+                    Command="{Binding OpenGeneratorCommand}"
+                    Style="{StaticResource ToolbarBtnTeal}"
+                    ToolTip="Générateur de mots de passe cryptographique  Ctrl+G">
+                    🎲
+                </Button>
+                <Button
+                    Margin="0,0,3,0"
+                    Command="{Binding LockCommand}"
+                    Style="{StaticResource ToolbarBtn}"
+                    ToolTip="Verrouiller la base — efface le mot de passe de la mémoire  Ctrl+L">
+                    🔒
+                </Button>
+                <Button
+                    Margin="0,0,3,0"
+                    Command="{Binding UnlockCommand}"
+                    Style="{StaticResource ToolbarBtn}"
+                    ToolTip="Déverrouiller la base avec le mot de passe">
+                    🔓
+                </Button>
+
+                <Separator Style="{StaticResource ToolbarSep}" />
+
+                <!--
+                    ── Barre de recherche ─────────────────────────
+                    Liée à SearchText — RefreshEntries() déclenché automatiquement
+                    via OnSearchTextChanged(partial void) dans le ViewModel.
+                    ───────────────────────────────────────────────────
+                -->
+                <TextBox
+                    x:Name="SearchBox"
+                    Width="240"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource VaultInput}"
+                    Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox.ToolTip>Rechercher dans les entrées du groupe sélectionné  Ctrl+F</TextBox.ToolTip>
+                </TextBox>
+
+            </StackPanel>
+        </Grid>
+
+        <!--  ══ Layout principal (Sidebar | Liste | Détail) ═══════════  -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="210" MinWidth="160" />
+                <ColumnDefinition Width="1" />
+                <ColumnDefinition Width="*" MinWidth="300" />
+            </Grid.ColumnDefinitions>
+
+            <!--  ── Sidebar : base de données + groupes ──────────────  -->
+            <Border Grid.Column="0" Background="{StaticResource SidebarBgBrush}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!--  Carte infos base  -->
+                    <Border
+                        Grid.Row="0"
+                        Padding="12,8"
+                        BorderBrush="{StaticResource BorderBrush_}"
+                        BorderThickness="0,0,0,1">
+                        <StackPanel>
+                            <TextBlock
+                                FontSize="12"
+                                FontWeight="Medium"
+                                Foreground="{StaticResource Text1Brush}"
+                                Text="{Binding Database.Name, FallbackValue='Aucune base ouverte'}"
+                                TextTrimming="CharacterEllipsis" />
+                            <TextBlock
+                                Margin="0,2,0,0"
+                                FontSize="10"
+                                Foreground="{StaticResource Text3Brush}">
+                                <Run Text="{Binding Database.TotalEntries, FallbackValue=0}" />
+                                <Run Text=" entrées · " />
+                                <Run Text="{Binding Groups.Count, FallbackValue=0}" />
+                                <Run Text=" groupes" />
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <!--
+                        Liste des groupes
+                        SelectedItem lié à SelectedGroup → déclenche RefreshEntries()
+                    -->
+                    <ListBox
+                        Grid.Row="1"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        ItemsSource="{Binding Groups}"
+                        SelectedItem="{Binding SelectedGroup}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="10,5" Orientation="Horizontal">
+                                    <TextBlock
+                                        Margin="0,0,8,0"
+                                        FontSize="15"
+                                        Text="{Binding Icon}" />
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock
+                                            FontSize="12"
+                                            Foreground="{StaticResource Text2Brush}"
+                                            Text="{Binding Name}" />
+                                        <TextBlock FontSize="10" Foreground="{StaticResource Text3Brush}">
+                                            <Run Text="{Binding EntryCount}" />
+                                            <Run Text=" entrées" />
+                                        </TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+
+            <!--  Séparateur vertical  -->
+            <Border Grid.Column="1" Background="{StaticResource BorderBrush_}" />
+
+            <!--
+                ── DataGrid des entrées ─────────────────────────────
+                SelectedItem lié à SelectedEntry → active/désactive
+                les boutons Edit, Delete, Copy, etc. via CanEditEntry()
+                ────────────────────────────────────────────────────────
+            -->
+            <Grid Grid.Column="2" Background="{StaticResource ContentBgBrush}">
+                <DataGrid
+                    IsReadOnly="True"
+                    ItemsSource="{Binding Entries}"
+                    SelectedItem="{Binding SelectedEntry}"
+                    Style="{StaticResource VaultGrid}">
+                    <DataGrid.Columns>
+                        <!--  Favori  -->
+                        <DataGridTextColumn
+                            Width="26"
+                            Binding="{Binding IsFavorite}"
+                            Header="★" />
+                        <!--  Titre  -->
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding Title}"
+                            Header="Titre" />
+                        <!--  Identifiant  -->
+                        <DataGridTextColumn
+                            Width="160"
+                            Binding="{Binding Username}"
+                            Header="Identifiant" />
+                        <!--  Mot de passe masqué  -->
+                        <DataGridTextColumn
+                            Width="110"
+                            Binding="{Binding Password, Converter={StaticResource MaskPass}}"
+                            Header="Mot de passe" />
+                        <!--  Date de modification  -->
+                        <DataGridTextColumn
+                            Width="90"
+                            Binding="{Binding ModifiedAt, Converter={StaticResource DateFmt}}"
+                            Header="Modifié" />
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!--  Message affiché quand aucune base n'est ouverte  -->
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="13"
+                    Foreground="{StaticResource Text3Brush}"
+                    Visibility="{Binding IsDatabaseOpen, Converter={StaticResource BoolToVis}, ConverterParameter=Invert}">
+                    Créez ou ouvrez une base de données pour commencer.
+                </TextBlock>
+            </Grid>
+        </Grid>
+
+        <!--  ══ Barre de statut ════════════════════════════════════════  -->
+        <Border
+            Grid.Row="2"
+            Background="{StaticResource SidebarBgBrush}"
+            BorderBrush="{StaticResource BorderBrush_}"
+            BorderThickness="0,1,0,0">
+            <Grid>
+                <!--  Gauche : message de statut + countdown presse-papier  -->
+                <StackPanel
+                    Margin="12,0"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        FontSize="10"
+                        Foreground="{StaticResource Text3Brush}"
+                        Text="{Binding StatusText}" />
+                    <!--  Countdown visible seulement quand > 0  -->
+                    <TextBlock
+                        Margin="10,0,0,0"
+                        FontSize="10"
+                        Foreground="{StaticResource AmberBrush}"
+                        Visibility="{Binding IsClipboardCountingDown, Converter={StaticResource BoolToVis}}">
+                        <Run Text="🔒 Presse-papier effacé dans " />
+                        <Run Text="{Binding ClipboardCountdown}" />
+                        <Run Text=" s" />
+                    </TextBlock>
+                </StackPanel>
+
+                <!--  Droite : nb entrées / état verrou / version  -->
+                <StackPanel
+                    Margin="12,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        Margin="0,0,12,0"
+                        FontSize="10"
+                        Foreground="{StaticResource AccentBrush}"
+                        Text="{Binding Entries.Count, StringFormat='{}{0} entrées'}"
+                        Visibility="{Binding IsDatabaseOpen, Converter={StaticResource BoolToVis}}" />
+                    <!--  État déverrouillé  -->
+                    <TextBlock
+                        Margin="0,0,12,0"
+                        FontSize="10"
+                        Foreground="{StaticResource TealLightBrush}"
+                        Text="🔓 Déverrouillé"
+                        Visibility="{Binding IsLocked, Converter={StaticResource BoolToVis}, ConverterParameter=Invert}" />
+                    <!--  État verrouillé  -->
+                    <TextBlock
+                        Margin="0,0,12,0"
+                        FontSize="10"
+                        Foreground="{StaticResource RedBrush}"
+                        Text="🔒 Verrouillé"
+                        Visibility="{Binding IsLocked, Converter={StaticResource BoolToVis}}" />
+                    <TextBlock
+                        Padding="6,1"
+                        Background="{StaticResource InputBgBrush}"
+                        FontSize="10"
+                        Foreground="{StaticResource Text3Brush}"
+                        Text="VaultIQ v1.0" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+    </Grid>
 </Window>
