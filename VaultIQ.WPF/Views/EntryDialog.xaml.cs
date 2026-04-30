@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using VaultIQ.Core.Entities;
@@ -10,37 +9,56 @@ namespace VaultIQ.WPF.Views;
 
 public partial class EntryDialog : Window
 {
-    private readonly EntryDialogViewModel _vm;
+    // Déclaré null! — garanti non-null avant InitializeComponent()
+    private EntryDialogViewModel _vm = null!;
     private bool _isNewEntry;
 
-    /// <summary>
-    /// Edit an existing entry in-place (EntryDialog modifies PasswordEntry directly per spec).
-    /// </summary>
     public EntryDialog(PasswordEntry entry, IEnumerable<PasswordGroup> groups)
     {
-        InitializeComponent();
+        // ═══════════════════════════════════════════════════════════
+        //  ORDRE CRITIQUE :
+        //  1. _vm AVANT InitializeComponent()
+        //     → InitializeComponent() déclenche les handlers XAML
+        //       (Slider.ValueChanged, CheckBox.Checked, ComboBox.SelectionChanged…)
+        //       Si _vm est null à ce moment, NullReferenceException.
+        // ═══════════════════════════════════════════════════════════
         _isNewEntry = entry.Title == "Nouvelle entrée" && entry.Username == string.Empty;
         _vm = new EntryDialogViewModel(entry, groups.ToList());
+
+        InitializeComponent();
         DataContext = _vm;
 
-        // Header
+        // ── Abonnement tardif des events générateur ───────────────
+        // Ces controls ont IsChecked/Value définis dans le XAML.
+        // En s'abonnant ICI (après InitializeComponent), on évite que
+        // Checked/ValueChanged se déclenche avant que les autres
+        // contrôles du même handler soient initialisés.
+        GenLengthSlider.ValueChanged += GenSlider_Changed;
+        ChkUppercase.Checked += GenOption_Changed;
+        ChkUppercase.Unchecked += GenOption_Changed;
+        ChkLowercase.Checked += GenOption_Changed;
+        ChkLowercase.Unchecked += GenOption_Changed;
+        ChkDigits.Checked += GenOption_Changed;
+        ChkDigits.Unchecked += GenOption_Changed;
+        ChkSymbols.Checked += GenOption_Changed;
+        ChkSymbols.Unchecked += GenOption_Changed;
+        ChkNoAmbiguous.Checked += GenOption_Changed;
+        ChkNoAmbiguous.Unchecked += GenOption_Changed;
+
+        // ── Remplissage initial des champs UI ─────────────────────
         DialogTitle.Text = _isNewEntry ? "➕ Nouvelle entrée" : "✏️ Modifier l'entrée";
-        DialogSubtitle.Text = _isNewEntry ? "Remplir les champs ci-dessous"
-                                          : $"Groupe : {_vm.SelectedGroup?.Name ?? "—"}";
+        DialogSubtitle.Text = _isNewEntry
+            ? "Remplir les champs ci-dessous"
+            : $"Groupe : {_vm.SelectedGroup?.Name ?? "—"}";
 
-        // Favorite toggle
-        FavoriteToggle.IsChecked = entry.IsFavorite;
-        FavoriteToggle.Content = entry.IsFavorite ? "★" : "☆";
+        FavoriteToggle.IsChecked = entry.IsFavorite;  // image switche via ControlTemplate.Triggers
 
-        // Groups
         GroupCombo.ItemsSource = _vm.Groups;
         GroupCombo.DisplayMemberPath = "Name";
         GroupCombo.SelectedItem = _vm.SelectedGroup;
 
-        // Password field
         PasswordBox.Password = entry.Password;
 
-        // Metadata (edit mode only)
         if (!_isNewEntry)
         {
             MetaPanel.Visibility = Visibility.Visible;
@@ -48,9 +66,16 @@ public partial class EntryDialog : Window
             MetaModified.Text = entry.ModifiedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm");
         }
 
-        // Initial strength bar
-        UpdateStrengthBar(entry.Password);
+        // ── Barre de force + générateur initial ───────────────────
+        // Utiliser Loaded car ActualWidth == 0 avant le premier rendu
+        Loaded += (_, _) =>
+        {
+            UpdateStrengthBar(entry.Password);
+            _vm.Regenerate();
+            GenLengthValue.Text = ((int)GenLengthSlider.Value).ToString();
+        };
 
+        // ── Notifications VM → UI ─────────────────────────────────
         _vm.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName == nameof(EntryDialogViewModel.GeneratedPreview))
@@ -58,20 +83,22 @@ public partial class EntryDialog : Window
             if (e.PropertyName == nameof(EntryDialogViewModel.EntropyLabel))
                 GenEntropyLabel.Text = _vm.EntropyLabel;
         };
-
-        // Initial generator preview
-        _vm.Regenerate();
-        GenLengthValue.Text = ((int)GenLengthSlider.Value).ToString();
     }
 
     // ── Header drag ───────────────────────────────────────────────
-    private void Header_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) => DragMove();
+    private void Header_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        => DragMove();
 
-    // ── Favorite toggle ───────────────────────────────────────────
+    // ── Favori ────────────────────────────────────────────────────
+    // L'image étoile est gérée par ControlTemplate.Triggers sur IsChecked.
+    // Ce handler existe uniquement si une logique supplémentaire est nécessaire.
     private void FavoriteToggle_Changed(object sender, RoutedEventArgs e)
-        => FavoriteToggle.Content = FavoriteToggle.IsChecked == true ? "★" : "☆";
+    {
+        // Rien à faire : le template XAML switche automatiquement
+        // star_empty_18.png → star_18.png selon IsChecked.
+    }
 
-    // ── Password field toggle (eye) ───────────────────────────────
+    // ── Toggle œil ───────────────────────────────────────────────
     private void EyeBtn_Click(object sender, RoutedEventArgs e)
     {
         bool show = PasswordClearBox.Visibility == Visibility.Collapsed;
@@ -89,11 +116,12 @@ public partial class EntryDialog : Window
         }
     }
 
-    // ── Password strength ─────────────────────────────────────────
+    // ── Barre de force ────────────────────────────────────────────
     private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         => UpdateStrengthBar(PasswordBox.Password);
 
-    private void PasswordClearBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+    private void PasswordClearBox_TextChanged(object sender,
+        System.Windows.Controls.TextChangedEventArgs e)
         => UpdateStrengthBar(PasswordClearBox.Text);
 
     private void UpdateStrengthBar(string password)
@@ -101,57 +129,57 @@ public partial class EntryDialog : Window
         int score = PasswordStrengthHelper.Evaluate(password);
         string label = PasswordStrengthHelper.Label(score);
         string hex = PasswordStrengthHelper.Color(score);
-        var brush = new SolidColorBrush((System.Windows.Media.Color)
-                       System.Windows.Media.ColorConverter.ConvertFromString(hex));
+        var brush = new SolidColorBrush(
+            (Color)ColorConverter.ConvertFromString(hex));
 
         double ratio = Math.Clamp(score / 100.0, 0, 1);
         StrengthFill.Width = StrengthContainer.ActualWidth * ratio;
         StrengthFill.Background = brush;
         StrengthLabel.Text = label;
         StrengthLabel.Foreground = brush;
-        StrengthScore.Text = score > 0 ? $"{score}/100" : "";
-        FooterStrength.Text = score > 0 ? $"Force : {label} — {score}/100" : "";
+        StrengthScore.Text = score > 0 ? $"{score}/100" : string.Empty;
+        FooterStrength.Text = score > 0 ? $"Force : {label} — {score}/100" : string.Empty;
     }
 
-    // ── Group combo ───────────────────────────────────────────────
-    private void GroupCombo_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    // ── Combo groupe — garde null pour InitializeComponent() ──────
+    private void GroupCombo_SelectionChanged(object sender,
+        System.Windows.Controls.SelectionChangedEventArgs e)
     {
+        if (_vm is null) return;
         if (GroupCombo.SelectedItem is PasswordGroup g)
             _vm.SelectedGroup = g;
     }
 
-    // ── Copy buttons ──────────────────────────────────────────────
+    // ── Copier ────────────────────────────────────────────────────
     private void CopyUsernameBtn_Click(object sender, RoutedEventArgs e)
-        => System.Windows.Clipboard.SetText(UsernameBox.Text);
+        => Clipboard.SetText(UsernameBox.Text);
 
     private void CopyPasswordBtn_Click(object sender, RoutedEventArgs e)
     {
         string pwd = PasswordBox.Visibility == Visibility.Visible
             ? PasswordBox.Password
             : PasswordClearBox.Text;
-        System.Windows.Clipboard.SetText(pwd);
+        Clipboard.SetText(pwd);
     }
 
-    // ── URL open ──────────────────────────────────────────────────
+    // ── Ouvrir URL ────────────────────────────────────────────────
     private void OpenUrlBtn_Click(object sender, RoutedEventArgs e)
     {
         string url = UrlBox.Text.Trim();
         if (string.IsNullOrEmpty(url)) return;
-        if (!url.StartsWith("http")) url = "https://" + url;
+        if (!url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+            url = "https://" + url;
         Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
     }
 
-    // ── Integrated generator ─────────────────────────────────────
+    // ── Panneau générateur intégré ────────────────────────────────
     private void GenerateBtn_Click(object sender, RoutedEventArgs e)
     {
-        GeneratorPanel.Visibility = GeneratorPanel.Visibility == Visibility.Visible
-            ? Visibility.Collapsed
-            : Visibility.Visible;
-        MetaPanel.Visibility = GeneratorPanel.Visibility == Visibility.Visible
-            ? Visibility.Collapsed
-            : (_isNewEntry ? Visibility.Collapsed : Visibility.Visible);
-        if (GeneratorPanel.Visibility == Visibility.Visible)
-            _vm.Regenerate();
+        bool opening = GeneratorPanel.Visibility != Visibility.Visible;
+        GeneratorPanel.Visibility = opening ? Visibility.Visible : Visibility.Collapsed;
+        MetaPanel.Visibility = (!opening && !_isNewEntry)
+            ? Visibility.Visible : Visibility.Collapsed;
+        if (opening) _vm.Regenerate();
     }
 
     private void CloseGeneratorPanel_Click(object sender, RoutedEventArgs e)
@@ -162,7 +190,8 @@ public partial class EntryDialog : Window
 
     private void GenSlider_Changed(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
-        if (GenLengthValue is null) return;
+        // _vm peut être null si le slider émet ValueChanged pendant InitializeComponent()
+        if (_vm is null || GenLengthValue is null) return;
         int len = (int)GenLengthSlider.Value;
         GenLengthValue.Text = len.ToString();
         _vm.GeneratorLength = len;
@@ -171,6 +200,7 @@ public partial class EntryDialog : Window
 
     private void GenOption_Changed(object sender, RoutedEventArgs e)
     {
+        if (_vm is null) return;
         _vm.UseUppercase = ChkUppercase.IsChecked == true;
         _vm.UseLowercase = ChkLowercase.IsChecked == true;
         _vm.UseDigits = ChkDigits.IsChecked == true;
@@ -179,7 +209,8 @@ public partial class EntryDialog : Window
         _vm.Regenerate();
     }
 
-    private void RegenerateBtn_Click(object sender, RoutedEventArgs e) => _vm.Regenerate();
+    private void RegenerateBtn_Click(object sender, RoutedEventArgs e)
+        => _vm?.Regenerate();
 
     private void UseGeneratedBtn_Click(object sender, RoutedEventArgs e)
     {
@@ -192,7 +223,7 @@ public partial class EntryDialog : Window
         MetaPanel.Visibility = _isNewEntry ? Visibility.Collapsed : Visibility.Visible;
     }
 
-    // ── Save / Cancel ─────────────────────────────────────────────
+    // ── Enregistrer ───────────────────────────────────────────────
     private void SaveBtn_Click(object sender, RoutedEventArgs e)
     {
         if (string.IsNullOrWhiteSpace(TitleBox.Text))
@@ -203,12 +234,10 @@ public partial class EntryDialog : Window
             return;
         }
 
-        // Write back directly into the PasswordEntry (spec: "modifie PasswordEntry directement")
         _vm.Entry.Title = TitleBox.Text.Trim();
         _vm.Entry.Username = UsernameBox.Text.Trim();
         _vm.Entry.Password = PasswordBox.Visibility == Visibility.Visible
-                               ? PasswordBox.Password
-                               : PasswordClearBox.Text;
+            ? PasswordBox.Password : PasswordClearBox.Text;
         _vm.Entry.Url = UrlBox.Text.Trim();
         _vm.Entry.Notes = NotesBox.Text;
         _vm.Entry.IsFavorite = FavoriteToggle.IsChecked == true;
@@ -219,12 +248,14 @@ public partial class EntryDialog : Window
         DialogResult = true;
     }
 
-    private void CancelBtn_Click(object sender, RoutedEventArgs e) => DialogResult = false;
+    private void CancelBtn_Click(object sender, RoutedEventArgs e)
+        => DialogResult = false;
 
-    // ── Resize → update strength bar ─────────────────────────────
+    // ── Resize → mettre à jour la barre de force ──────────────────
     protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
     {
         base.OnRenderSizeChanged(sizeInfo);
+        if (_vm is null) return;
         string pwd = PasswordBox.Visibility == Visibility.Visible
             ? PasswordBox.Password : PasswordClearBox.Text;
         UpdateStrengthBar(pwd);

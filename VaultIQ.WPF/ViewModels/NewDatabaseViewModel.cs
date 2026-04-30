@@ -9,7 +9,7 @@ public partial class NewDatabaseViewModel : ObservableObject
     [ObservableProperty] private string _databaseName = "MesComptes";
     [ObservableProperty] private string _masterPassword = string.Empty;
     [ObservableProperty] private string _confirmPassword = string.Empty;
-    [ObservableProperty] private string _filePath = string.Empty;
+    [ObservableProperty] private string _filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "VaultIQ", "MesComptes.viq");
     [ObservableProperty] private bool _enablePin = true;
     [ObservableProperty] private bool _enableRecovery = true;
     [ObservableProperty] private int _passwordStrength;

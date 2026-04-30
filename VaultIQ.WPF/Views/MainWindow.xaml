@@ -8,44 +8,76 @@
     Height="660"
     MinWidth="820"
     MinHeight="520"
-    Background="{StaticResource NavyBrush}">
+    Background="#0C1E3A"
+    WindowState="Maximized">
 
     <Window.Resources>
-        <!--  ── Couleurs ─────────────────────────────────────  -->
-        <SolidColorBrush x:Key="Navy" Color="#0C1E3A" />
-        <SolidColorBrush x:Key="Midnight" Color="#070E1C" />
-        <SolidColorBrush x:Key="Mid" Color="#132944" />
-        <SolidColorBrush x:Key="Panel" Color="#0F2035" />
-        <SolidColorBrush x:Key="Blue" Color="#185FA5" />
-        <SolidColorBrush x:Key="Accent" Color="#378ADD" />
-        <SolidColorBrush x:Key="Teal" Color="#1D9E75" />
-        <SolidColorBrush x:Key="Teal2" Color="#12D68C" />
-        <SolidColorBrush x:Key="Border1" Color="#26378ADD" />
-        <SolidColorBrush x:Key="Border2" Color="#47378ADD" />
-        <SolidColorBrush x:Key="Text1" Color="#D4E4F7" />
-        <SolidColorBrush x:Key="Text2" Color="#7BA3C8" />
-        <SolidColorBrush x:Key="Text3" Color="#3D6080" />
-        <SolidColorBrush x:Key="Green" Color="#22C55E" />
-        <SolidColorBrush x:Key="Amber" Color="#F59E0B" />
-        <SolidColorBrush x:Key="Red" Color="#EF4444" />
-        <SolidColorBrush x:Key="Selected" Color="#2E378ADD" />
-        <SolidColorBrush x:Key="AppBg" Color="#050C18" />
+        <!--  Converters  -->
+        <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
+        <conv:NullToVisibilityConverter x:Key="NullToVis" />
+        <conv:MaskPasswordConverter x:Key="MaskPass" />
+        <conv:StrengthToColorConverter x:Key="StrColor" />
+        <conv:StrengthToBackgroundConverter x:Key="StrBgColor" />
+        <conv:DateConverter x:Key="DateFmt" />
 
-        <!--  ── Style : bouton toolbar générique ───────────  -->
+        <!--  Brushes  -->
+        <SolidColorBrush x:Key="NavyBrush" Color="#0C1E3A" />
+        <SolidColorBrush x:Key="MidnightBrush" Color="#070E1C" />
+        <SolidColorBrush x:Key="MidBrush" Color="#132944" />
+        <SolidColorBrush x:Key="PanelBrush" Color="#0F2035" />
+        <SolidColorBrush x:Key="BlueBrush" Color="#185FA5" />
+        <SolidColorBrush x:Key="AccentBrush" Color="#378ADD" />
+        <SolidColorBrush x:Key="TealBrush" Color="#1D9E75" />
+        <SolidColorBrush x:Key="TealLightBrush" Color="#12D68C" />
+        <SolidColorBrush x:Key="Border1Brush" Color="#26378ADD" />
+        <SolidColorBrush x:Key="Border2Brush" Color="#47378ADD" />
+        <SolidColorBrush x:Key="Text1Brush" Color="#D4E4F7" />
+        <SolidColorBrush x:Key="Text2Brush" Color="#7BA3C8" />
+        <SolidColorBrush x:Key="Text3Brush" Color="#3D6080" />
+        <SolidColorBrush x:Key="GreenBrush" Color="#22C55E" />
+        <SolidColorBrush x:Key="AmberBrush" Color="#F59E0B" />
+        <SolidColorBrush x:Key="RedBrush" Color="#EF4444" />
+        <SolidColorBrush x:Key="SelectedBrush" Color="#2E378ADD" />
+        <!--  Layout aliases  -->
+        <SolidColorBrush x:Key="ToolbarBgBrush" Color="#0F2035" />
+        <SolidColorBrush x:Key="SidebarBgBrush" Color="#070E1C" />
+        <SolidColorBrush x:Key="ContentBgBrush" Color="#090F1C" />
+        <SolidColorBrush x:Key="BorderBrush_" Color="#26378ADD" />
+        <SolidColorBrush x:Key="InputBgBrush" Color="#0F2035" />
+
+        <!--  Separator toolbar  -->
+        <Style x:Key="ToolbarSep" TargetType="Separator">
+            <Setter Property="Width" Value="1" />
+            <Setter Property="Height" Value="22" />
+            <Setter Property="Margin" Value="5,0" />
+            <Setter Property="Background" Value="#47378ADD" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Separator">
+                        <Rectangle
+                            Width="{TemplateBinding Width}"
+                            Height="{TemplateBinding Height}"
+                            Fill="{TemplateBinding Background}" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--  ToolbarBtn  -->
         <Style x:Key="ToolbarBtn" TargetType="Button">
             <Setter Property="Width" Value="32" />
             <Setter Property="Height" Value="32" />
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="{StaticResource Text2}" />
             <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="FontSize" Value="14" />
             <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Padding" Value="5" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border
                             x:Name="bdr"
+                            Padding="{TemplateBinding Padding}"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
@@ -55,8 +87,10 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="bdr" Property="Background" Value="#1E378ADD" />
-                                <Setter TargetName="bdr" Property="BorderBrush" Value="{StaticResource Border2}" />
-                                <Setter Property="Foreground" Value="{StaticResource Text1}" />
+                                <Setter TargetName="bdr" Property="BorderBrush" Value="#47378ADD" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="bdr" Property="Opacity" Value="0.30" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -64,14 +98,12 @@
             </Setter>
         </Style>
 
-        <!--  ── Style : bouton toolbar primaire (bleu) ─────  -->
         <Style
             x:Key="ToolbarBtnPrimary"
             BasedOn="{StaticResource ToolbarBtn}"
             TargetType="Button">
             <Setter Property="Background" Value="#185FA5" />
             <Setter Property="BorderBrush" Value="#185FA5" />
-            <Setter Property="Foreground" Value="White" />
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#1E72BB" />
@@ -79,126 +111,25 @@
             </Style.Triggers>
         </Style>
 
-        <!--  ── Style : bouton toolbar teal ────────────────  -->
         <Style
             x:Key="ToolbarBtnTeal"
             BasedOn="{StaticResource ToolbarBtn}"
             TargetType="Button">
             <Setter Property="Background" Value="#261D9E75" />
             <Setter Property="BorderBrush" Value="#661D9E75" />
-            <Setter Property="Foreground" Value="{StaticResource Teal2}" />
         </Style>
 
-        <!--  ── Style : élément de menu bar ────────────────  -->
-        <Style x:Key="MenuBarItem" TargetType="Button">
-            <Setter Property="Height" Value="28" />
-            <Setter Property="Padding" Value="10,0" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="{StaticResource Text2}" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="FontSize" Value="12" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border
-                            x:Name="bdr"
-                            Padding="{TemplateBinding Padding}"
-                            Background="{TemplateBinding Background}"
-                            CornerRadius="4">
-                            <ContentPresenter VerticalAlignment="Center" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="bdr" Property="Background" Value="#1A378ADD" />
-                                <Setter Property="Foreground" Value="{StaticResource Text1}" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!--  ── Style : élément actif du menu bar ───────────  -->
-        <Style
-            x:Key="MenuBarItemActive"
-            BasedOn="{StaticResource MenuBarItem}"
-            TargetType="Button">
-            <Setter Property="Background" Value="#185FA5" />
-            <Setter Property="Foreground" Value="White" />
-        </Style>
-
-        <!--  ── Style : ligne sidebar ───────────────────────  -->
-        <Style x:Key="SidebarItem" TargetType="Border">
-            <Setter Property="Height" Value="32" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Background" Value="Transparent" />
-        </Style>
-
-        <!--  ── Style : bouton action panneau détail ────────  -->
-        <Style x:Key="ActionBtn" TargetType="Button">
-            <Setter Property="Height" Value="28" />
-            <Setter Property="FontSize" Value="11" />
-            <Setter Property="FontWeight" Value="Medium" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="5">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!--  ── Style : petits boutons copier ───────────────  -->
-        <Style x:Key="CopyBtn" TargetType="Button">
-            <Setter Property="Width" Value="22" />
-            <Setter Property="Height" Value="22" />
-            <Setter Property="Background" Value="{StaticResource Panel}" />
-            <Setter Property="Foreground" Value="{StaticResource Text3}" />
-            <Setter Property="BorderBrush" Value="{StaticResource Border1}" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="FontSize" Value="11" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="4">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#185FA5" />
-                                <Setter Property="Foreground" Value="White" />
-                                <Setter Property="BorderBrush" Value="#185FA5" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!--  ── Style : TextBox recherche ───────────────────  -->
-        <Style x:Key="SearchBox" TargetType="TextBox">
+        <!--  VaultInput  -->
+        <Style x:Key="VaultInput" TargetType="TextBox">
             <Setter Property="Height" Value="32" />
             <Setter Property="Background" Value="#0AFFFFFF" />
-            <Setter Property="Foreground" Value="{StaticResource Text1}" />
+            <Setter Property="Foreground" Value="{StaticResource Text1Brush}" />
             <Setter Property="FontSize" Value="12" />
-            <Setter Property="BorderBrush" Value="{StaticResource Border1}" />
+            <Setter Property="BorderBrush" Value="{StaticResource Border1Brush}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Padding" Value="28,0,8,0" />
+            <Setter Property="Padding" Value="30,0,8,0" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="CaretBrush" Value="{StaticResource AccentBrush}" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
@@ -214,32 +145,149 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsFocused" Value="True">
-                                <Setter Property="BorderBrush" Value="{StaticResource Accent}" />
+                                <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!--  VaultGrid  -->
+        <Style x:Key="VaultGrid" TargetType="DataGrid">
+            <Setter Property="AutoGenerateColumns" Value="False" />
+            <Setter Property="CanUserAddRows" Value="False" />
+            <Setter Property="CanUserDeleteRows" Value="False" />
+            <Setter Property="CanUserReorderColumns" Value="True" />
+            <Setter Property="CanUserSortColumns" Value="True" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{StaticResource Text2Brush}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="GridLinesVisibility" Value="None" />
+            <Setter Property="RowBackground" Value="Transparent" />
+            <Setter Property="AlternatingRowBackground" Value="#05FFFFFF" />
+            <Setter Property="RowHeight" Value="34" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+            <Setter Property="SelectionMode" Value="Single" />
+            <Setter Property="SelectionUnit" Value="FullRow" />
+            <Setter Property="ColumnHeaderHeight" Value="28" />
+
+            <!--  CellStyle : centrage vertical + padding horizontal pour TOUTES les colonnes  -->
+            <Setter Property="CellStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="VerticalAlignment" Value="Stretch" />
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                        <Setter Property="Padding" Value="0" />
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="DataGridCell">
+                                    <Border
+                                        Padding="10,0"
+                                        Background="{TemplateBinding Background}"
+                                        BorderThickness="0">
+                                        <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="Foreground" Value="{StaticResource Text1Brush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+
+            <!--  ColumnHeaderStyle : même hauteur, centrage vertical  -->
+            <Setter Property="ColumnHeaderStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#0A1220" />
+                        <Setter Property="Foreground" Value="{StaticResource Text3Brush}" />
+                        <Setter Property="FontSize" Value="9" />
+                        <Setter Property="FontWeight" Value="SemiBold" />
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                        <Setter Property="HorizontalContentAlignment" Value="Left" />
+                        <Setter Property="Padding" Value="10,0" />
+                        <Setter Property="Height" Value="28" />
+                        <Setter Property="BorderThickness" Value="0,0,0,1" />
+                        <Setter Property="BorderBrush" Value="{StaticResource Border1Brush}" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="DataGridColumnHeader">
+                                    <Border
+                                        Padding="{TemplateBinding Padding}"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}">
+                                        <Grid>
+                                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                            <!--  Flèche de tri  -->
+                                            <Path
+                                                x:Name="SortArrow"
+                                                Margin="0,0,6,0"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center"
+                                                Fill="{StaticResource Text3Brush}"
+                                                Visibility="Collapsed" />
+                                        </Grid>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#0F1A2A" />
+                                            <Setter Property="Foreground" Value="{StaticResource Text2Brush}" />
+                                        </Trigger>
+                                        <Trigger Property="SortDirection" Value="Ascending">
+                                            <Setter TargetName="SortArrow" Property="Visibility" Value="Visible" />
+                                            <Setter TargetName="SortArrow" Property="Data" Value="M 0 4 L 4 0 L 8 4" />
+                                            <Setter TargetName="SortArrow" Property="StrokeThickness" Value="1.5" />
+                                            <Setter TargetName="SortArrow" Property="Stroke" Value="{StaticResource AccentBrush}" />
+                                            <Setter Property="Foreground" Value="{StaticResource AccentBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="SortDirection" Value="Descending">
+                                            <Setter TargetName="SortArrow" Property="Visibility" Value="Visible" />
+                                            <Setter TargetName="SortArrow" Property="Data" Value="M 0 0 L 4 4 L 8 0" />
+                                            <Setter TargetName="SortArrow" Property="StrokeThickness" Value="1.5" />
+                                            <Setter TargetName="SortArrow" Property="Stroke" Value="{StaticResource AccentBrush}" />
+                                            <Setter Property="Foreground" Value="{StaticResource AccentBrush}" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+
+            <!--  RowStyle : sélection pleine ligne + hover  -->
+            <Setter Property="RowStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#2E378ADD" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#14378ADD" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
-    <!--  ══ Ressources locales ════════════════════════════════════════  -->
-    <!--<Window.Resources>
-        <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
-        <conv:NullToVisibilityConverter x:Key="NullToVis" />
-        <conv:MaskPasswordConverter x:Key="MaskPass" />
-        <conv:StrengthToColorConverter x:Key="StrColor" />
-        <conv:DateConverter x:Key="DateFmt" />
-    </Window.Resources>-->
-
-    <!--
-        ══ Raccourcis clavier globaux ════════════════════════════════
-        Chaque KeyBinding lie le raccourci à la commande du ViewModel.
-        La commande gère elle-même le CanExecute (bouton grisé + raccourci ignoré si désactivé).
-        ══════════════════════════════════════════════════════════════════
-    -->
+    <!--  Keyboard shortcuts  -->
     <Window.InputBindings>
-        <!--  Groupe Fichier  -->
         <KeyBinding
             Key="N"
             Command="{Binding NewDatabaseCommand}"
@@ -252,7 +300,6 @@
             Key="S"
             Command="{Binding SaveDatabaseCommand}"
             Modifiers="Ctrl" />
-        <!--  Groupe Entrées  -->
         <KeyBinding
             Key="I"
             Command="{Binding AddEntryCommand}"
@@ -266,7 +313,6 @@
             Command="{Binding DuplicateEntryCommand}"
             Modifiers="Ctrl" />
         <KeyBinding Key="Delete" Command="{Binding DeleteEntryCommand}" />
-        <!--  Groupe Presse-papier  -->
         <KeyBinding
             Key="B"
             Command="{Binding CopyUsernameCommand}"
@@ -279,7 +325,6 @@
             Key="U"
             Command="{Binding OpenUrlCommand}"
             Modifiers="Ctrl" />
-        <!--  Groupe Outils  -->
         <KeyBinding
             Key="G"
             Command="{Binding OpenGeneratorCommand}"
@@ -288,176 +333,350 @@
             Key="L"
             Command="{Binding LockCommand}"
             Modifiers="Ctrl" />
-        <!--  Recherche  -->
         <KeyBinding
             Key="F"
             Command="{Binding FocusSearchCommand}"
             Modifiers="Ctrl" />
     </Window.InputBindings>
 
-    <!--  ══ Mise en page principale ═══════════════════════════════════  -->
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="26" />
             <RowDefinition Height="44" />
-            <!--  Toolbar  -->
             <RowDefinition Height="*" />
-            <!--  Contenu principal  -->
             <RowDefinition Height="24" />
-            <!--  Barre de statut  -->
         </Grid.RowDefinitions>
 
         <!--
-            ═══════════════════════════════════════════════════════════
-            TOOLBAR — 4 groupes séparés par des séparateurs visuels
-            Chaque bouton :
-            • Style="{StaticResource ToolbarBtn}" (ou Primary/Teal)
-            • Command="{Binding XxxCommand}"  ← lie au ViewModel
-            • ToolTip="Description  Ctrl+X"  ← affiché au survol
-            • Content = emoji (rendu natif Windows)
-            ═══════════════════════════════════════════════════════════════
+            ══ MENU BAR ══════════════════════════════════════════════
+            Icônes menu : 16×16 px  (/Resources/Icons/*.png)
+            ════════════════════════════════════════════════════════════
         -->
-        <Grid Grid.Row="0" Background="{StaticResource ToolbarBgBrush}">
-            <StackPanel Margin="8,6" Orientation="Horizontal">
+        <Menu
+            Grid.Row="0"
+            Background="{StaticResource MidnightBrush}"
+            BorderBrush="{StaticResource BorderBrush_}"
+            BorderThickness="0,0,0,1"
+            FontSize="12"
+            Foreground="{StaticResource Text2Brush}">
 
-                <!--  ── Groupe 1 : Gestion de fichier ───────────────  -->
+            <!--  Fichier  -->
+            <MenuItem Foreground="{StaticResource Text2Brush}" Header="_Fichier">
+                <MenuItem
+                    Command="{Binding NewDatabaseCommand}"
+                    Header="Nouvelle base…"
+                    InputGestureText="Ctrl+N" />
+                <MenuItem
+                    Command="{Binding OpenDatabaseCommand}"
+                    Header="Ouvrir…"
+                    InputGestureText="Ctrl+O" />
+                <MenuItem
+                    Command="{Binding SaveDatabaseCommand}"
+                    Header="Enregistrer"
+                    InputGestureText="Ctrl+S" />
+                <Separator />
+                <MenuItem
+                    Command="{Binding LockCommand}"
+                    Header="Verrouiller"
+                    InputGestureText="Ctrl+L" />
+                <MenuItem Command="{Binding UnlockCommand}" Header="Déverrouiller" />
+                <Separator />
+                <MenuItem
+                    Command="{Binding ExitCommand}"
+                    Header="Quitter"
+                    InputGestureText="Alt+F4" />
+            </MenuItem>
+
+            <!--  Groupe  -->
+            <MenuItem Foreground="{StaticResource Text2Brush}" Header="_Groupe">
+                <MenuItem Command="{Binding AddGroupCommand}" Header="Nouveau groupe…" />
+                <MenuItem Command="{Binding RenameGroupCommand}" Header="Renommer le groupe" />
+                <MenuItem Command="{Binding DeleteGroupCommand}" Header="Supprimer le groupe" />
+            </MenuItem>
+
+            <!--  Entrée  -->
+            <MenuItem Foreground="{StaticResource Text2Brush}" Header="_Entrée">
+                <MenuItem
+                    Command="{Binding AddEntryCommand}"
+                    Header="Ajouter une entrée"
+                    InputGestureText="Ctrl+I" />
+                <MenuItem
+                    Command="{Binding EditEntryCommand}"
+                    Header="Modifier"
+                    InputGestureText="Ctrl+E" />
+                <MenuItem
+                    Command="{Binding DuplicateEntryCommand}"
+                    Header="Dupliquer"
+                    InputGestureText="Ctrl+D" />
+                <MenuItem
+                    Command="{Binding DeleteEntryCommand}"
+                    Header="Supprimer"
+                    InputGestureText="Suppr" />
+                <Separator />
+                <MenuItem
+                    Command="{Binding CopyUsernameCommand}"
+                    Header="Copier l'identifiant"
+                    InputGestureText="Ctrl+B" />
+                <MenuItem
+                    Command="{Binding CopyPasswordCommand}"
+                    Header="Copier le mot de passe"
+                    InputGestureText="Ctrl+Maj+C" />
+                <MenuItem
+                    Command="{Binding OpenUrlCommand}"
+                    Header="Ouvrir l'URL"
+                    InputGestureText="Ctrl+U" />
+            </MenuItem>
+
+            <!--  Affichage  -->
+            <MenuItem Foreground="{StaticResource Text2Brush}" Header="_Affichage">
+                <MenuItem Command="{Binding SortByTitleCommand}" Header="Trier par titre" />
+                <MenuItem Command="{Binding SortByDateCommand}" Header="Trier par date" />
+                <MenuItem Command="{Binding SortByStrengthCommand}" Header="Trier par force" />
+                <Separator />
+                <MenuItem
+                    Command="{Binding ToggleFavoritesFirstCommand}"
+                    Header="Favoris en premier"
+                    IsCheckable="True"
+                    IsChecked="{Binding FavoritesFirst}" />
+            </MenuItem>
+
+            <!--  Outils  -->
+            <MenuItem Foreground="{StaticResource Text2Brush}" Header="_Outils">
+                <MenuItem
+                    Command="{Binding OpenGeneratorCommand}"
+                    Header="Générateur de mots de passe"
+                    InputGestureText="Ctrl+G" />
+                <Separator />
+                <MenuItem Command="{Binding OpenOptionsCommand}" Header="Options…" />
+            </MenuItem>
+
+            <!--  Aide  -->
+            <MenuItem Foreground="{StaticResource Text2Brush}" Header="_Aide">
+                <MenuItem Command="{Binding OpenDocCommand}" Header="Documentation" />
+                <MenuItem Command="{Binding AboutCommand}" Header="À propos de VaultIQ" />
+            </MenuItem>
+        </Menu>
+
+        <!--
+            ══ TOOLBAR ════════════════════════════════════════════════
+            Icônes toolbar : 18×18 px dans bouton 32×32
+            ════════════════════════════════════════════════════════════
+        -->
+        <Grid Grid.Row="1" Background="{StaticResource ToolbarBgBrush}">
+            <StackPanel
+                Margin="8,6"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+
+                <!--  Groupe 1 : Fichier  -->
                 <Button
                     Margin="0,0,3,0"
                     Command="{Binding NewDatabaseCommand}"
                     Style="{StaticResource ToolbarBtn}"
                     ToolTip="Nouvelle base de données  Ctrl+N">
-                    📄
+                    <Image
+                        Width="18"
+                        Height="18"
+                        Source="/Resources/Icons/new_file_18.png" />
                 </Button>
                 <Button
                     Margin="0,0,3,0"
                     Command="{Binding OpenDatabaseCommand}"
                     Style="{StaticResource ToolbarBtn}"
                     ToolTip="Ouvrir un fichier .viq existant  Ctrl+O">
-                    📂
+                    <Image
+                        Width="18"
+                        Height="18"
+                        Source="/Resources/Icons/open_folder_18.png" />
                 </Button>
                 <Button
                     Margin="0,0,3,0"
                     Command="{Binding SaveDatabaseCommand}"
                     Style="{StaticResource ToolbarBtn}"
                     ToolTip="Enregistrer la base ouverte  Ctrl+S">
-                    💾
+                    <Image
+                        Width="18"
+                        Height="18"
+                        Source="/Resources/Icons/save_18.png" />
                 </Button>
 
                 <Separator Style="{StaticResource ToolbarSep}" />
 
-                <!--  ── Groupe 2 : CRUD entrées ────────────────────  -->
+                <!--  Groupe 2 : CRUD entrées  -->
                 <Button
                     Margin="0,0,3,0"
                     Command="{Binding AddEntryCommand}"
                     Style="{StaticResource ToolbarBtnPrimary}"
                     ToolTip="Ajouter une entrée dans le groupe sélectionné  Ctrl+I">
-                    ➕
+                    <Image
+                        Width="18"
+                        Height="18"
+                        Source="/Resources/Icons/add_entry_18.png" />
                 </Button>
                 <Button
                     Margin="0,0,3,0"
                     Command="{Binding EditEntryCommand}"
+                    IsEnabled="{Binding IsEntrySelected}"
                     Style="{StaticResource ToolbarBtn}"
                     ToolTip="Modifier l'entrée sélectionnée  Ctrl+E">
-                    ✏️
+                    <Image
+                        Width="18"
+                        Height="18"
+                        Source="/Resources/Icons/edit_18.png" />
                 </Button>
                 <Button
                     Margin="0,0,3,0"
                     Command="{Binding DuplicateEntryCommand}"
+                    IsEnabled="{Binding IsEntrySelected}"
                     Style="{StaticResource ToolbarBtn}"
                     ToolTip="Dupliquer l'entrée sélectionnée  Ctrl+D">
-                    📋
+                    <Image
+                        Width="18"
+                        Height="18"
+                        Source="/Resources/Icons/duplicate_18.png" />
                 </Button>
                 <Button
                     Margin="0,0,3,0"
                     Command="{Binding DeleteEntryCommand}"
+                    IsEnabled="{Binding IsEntrySelected}"
                     Style="{StaticResource ToolbarBtn}"
                     ToolTip="Supprimer l'entrée sélectionnée  Suppr">
-                    🗑
+                    <Image
+                        Width="18"
+                        Height="18"
+                        Source="/Resources/Icons/trash_18.png" />
                 </Button>
 
                 <Separator Style="{StaticResource ToolbarSep}" />
 
-                <!--  ── Groupe 3 : Presse-papier ───────────────────  -->
+                <!--  Groupe 3 : Presse-papier  -->
                 <Button
                     Margin="0,0,3,0"
                     Command="{Binding CopyUsernameCommand}"
+                    IsEnabled="{Binding IsEntrySelected}"
                     Style="{StaticResource ToolbarBtn}"
                     ToolTip="Copier l'identifiant  Ctrl+B">
-                    👤
+                    <Image
+                        Width="18"
+                        Height="18"
+                        Source="/Resources/Icons/user_18.png" />
                 </Button>
                 <Button
                     Margin="0,0,3,0"
                     Command="{Binding CopyPasswordCommand}"
+                    IsEnabled="{Binding IsEntrySelected}"
                     Style="{StaticResource ToolbarBtn}"
-                    ToolTip="Copier le mot de passe&#x0a;Effacement automatique du presse-papier après 15 s  Ctrl+Maj+C">
-                    🔑
+                    ToolTip="Copier le mot de passe — effacement auto 15 s  Ctrl+Maj+C">
+                    <Image
+                        Width="18"
+                        Height="18"
+                        Source="/Resources/Icons/key_18.png" />
                 </Button>
                 <Button
                     Margin="0,0,3,0"
                     Command="{Binding OpenUrlCommand}"
+                    IsEnabled="{Binding IsEntrySelected}"
                     Style="{StaticResource ToolbarBtn}"
-                    ToolTip="Ouvrir l'URL dans le navigateur par défaut  Ctrl+U">
-                    🌐
+                    ToolTip="Ouvrir l'URL dans le navigateur  Ctrl+U">
+                    <Image
+                        Width="18"
+                        Height="18"
+                        Source="/Resources/Icons/globe_18.png" />
                 </Button>
 
                 <Separator Style="{StaticResource ToolbarSep}" />
 
-                <!--  ── Groupe 4 : Outils ──────────────────────────  -->
+                <!--  Groupe 4 : Outils  -->
                 <Button
                     Margin="0,0,3,0"
                     Command="{Binding OpenGeneratorCommand}"
                     Style="{StaticResource ToolbarBtnTeal}"
                     ToolTip="Générateur de mots de passe cryptographique  Ctrl+G">
-                    🎲
+                    <Image
+                        Width="18"
+                        Height="18"
+                        Source="/Resources/Icons/dice_18.png" />
                 </Button>
                 <Button
                     Margin="0,0,3,0"
                     Command="{Binding LockCommand}"
                     Style="{StaticResource ToolbarBtn}"
-                    ToolTip="Verrouiller la base — efface le mot de passe de la mémoire  Ctrl+L">
-                    🔒
+                    ToolTip="Verrouiller la base  Ctrl+L"
+                    Visibility="{Binding IsLocked, Converter={StaticResource BoolToVis}, ConverterParameter=Invert}">
+                    <Image
+                        Width="18"
+                        Height="18"
+                        Source="/Resources/Icons/lock_18.png" />
                 </Button>
                 <Button
                     Margin="0,0,3,0"
                     Command="{Binding UnlockCommand}"
                     Style="{StaticResource ToolbarBtn}"
-                    ToolTip="Déverrouiller la base avec le mot de passe">
-                    🔓
+                    ToolTip="Déverrouiller la base"
+                    Visibility="{Binding IsLocked, Converter={StaticResource BoolToVis}}">
+                    <Image
+                        Width="18"
+                        Height="18"
+                        Source="/Resources/Icons/unlock_18.png" />
                 </Button>
 
                 <Separator Style="{StaticResource ToolbarSep}" />
 
-                <!--
-                    ── Barre de recherche ─────────────────────────
-                    Liée à SearchText — RefreshEntries() déclenché automatiquement
-                    via OnSearchTextChanged(partial void) dans le ViewModel.
-                    ───────────────────────────────────────────────────
-                -->
-                <TextBox
-                    x:Name="SearchBox"
-                    Width="240"
-                    VerticalAlignment="Center"
-                    Style="{StaticResource VaultInput}"
-                    Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBox.ToolTip>Rechercher dans les entrées du groupe sélectionné  Ctrl+F</TextBox.ToolTip>
-                </TextBox>
+                <!--  Barre de recherche  -->
+                <Grid VerticalAlignment="Center">
+                    <TextBox
+                        x:Name="SearchBox"
+                        Width="240"
+                        Style="{StaticResource VaultInput}"
+                        Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                        ToolTip="Rechercher dans les entrées  Ctrl+F" />
+                    <Image
+                        Width="14"
+                        Height="14"
+                        Margin="8,0,0,0"
+                        HorizontalAlignment="Left"
+                        IsHitTestVisible="False"
+                        Opacity="0.4"
+                        Source="/Resources/Icons/search_14.png" />
+                    <TextBlock
+                        Margin="28,0,0,0"
+                        VerticalAlignment="Center"
+                        Cursor=""
+                        FontSize="12"
+                        Foreground="{StaticResource Text3Brush}"
+                        IsHitTestVisible="False"
+                        Text="Rechercher…">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
 
             </StackPanel>
         </Grid>
 
-        <!--  ══ Layout principal (Sidebar | Liste | Détail) ═══════════  -->
-        <Grid Grid.Row="1">
+        <!--  ══ Layout principal ══════════════════════════════════════  -->
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="210" MinWidth="160" />
                 <ColumnDefinition Width="1" />
                 <ColumnDefinition Width="*" MinWidth="300" />
             </Grid.ColumnDefinitions>
 
-            <!--  ── Sidebar : base de données + groupes ──────────────  -->
+            <!--  Sidebar  -->
             <Border Grid.Column="0" Background="{StaticResource SidebarBgBrush}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
                     <!--  Carte infos base  -->
@@ -467,34 +686,58 @@
                         BorderBrush="{StaticResource BorderBrush_}"
                         BorderThickness="0,0,0,1">
                         <StackPanel>
+                            <DockPanel>
+                                <Image
+                                    Width="14"
+                                    Height="14"
+                                    Margin="0,0,6,0"
+                                    VerticalAlignment="Center"
+                                    DockPanel.Dock="Left"
+                                    Opacity="0.6"
+                                    Source="/Resources/Icons/database.png" />
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    FontSize="12"
+                                    FontWeight="Medium"
+                                    Foreground="{StaticResource Text1Brush}"
+                                    Text="{Binding Database.Name, FallbackValue='Aucune base ouverte'}"
+                                    TextTrimming="CharacterEllipsis" />
+                            </DockPanel>
                             <TextBlock
-                                FontSize="12"
-                                FontWeight="Medium"
-                                Foreground="{StaticResource Text1Brush}"
-                                Text="{Binding Database.Name, FallbackValue='Aucune base ouverte'}"
-                                TextTrimming="CharacterEllipsis" />
-                            <TextBlock
-                                Margin="0,2,0,0"
+                                Margin="0,3,0,0"
                                 FontSize="10"
                                 Foreground="{StaticResource Text3Brush}">
-                                <Run Text="{Binding Database.TotalEntries, FallbackValue=0}" />
+                                <Run Text="{Binding TotalEntries, Mode=OneWay, FallbackValue=0}" />
                                 <Run Text=" entrées · " />
-                                <Run Text="{Binding Groups.Count, FallbackValue=0}" />
+                                <Run Text="{Binding TotalGroups, Mode=OneWay, FallbackValue=0}" />
                                 <Run Text=" groupes" />
                             </TextBlock>
                         </StackPanel>
                     </Border>
 
-                    <!--
-                        Liste des groupes
-                        SelectedItem lié à SelectedGroup → déclenche RefreshEntries()
-                    -->
+                    <!--  Liste des groupes  -->
                     <ListBox
                         Grid.Row="1"
                         Background="Transparent"
                         BorderThickness="0"
                         ItemsSource="{Binding Groups}"
                         SelectedItem="{Binding SelectedGroup}">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="Foreground" Value="{StaticResource Text2Brush}" />
+                                <Setter Property="Padding" Value="0" />
+                                <Setter Property="Cursor" Value="Hand" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="#2E378ADD" />
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#14378ADD" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Margin="10,5" Orientation="Horizontal">
@@ -508,7 +751,7 @@
                                             Foreground="{StaticResource Text2Brush}"
                                             Text="{Binding Name}" />
                                         <TextBlock FontSize="10" Foreground="{StaticResource Text3Brush}">
-                                            <Run Text="{Binding EntryCount}" />
+                                            <Run Text="{Binding EntryCount, Mode=OneWay}" />
                                             <Run Text=" entrées" />
                                         </TextBlock>
                                     </StackPanel>
@@ -516,94 +759,328 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
+
+                    <!--  Bouton nouveau groupe  -->
+                    <Button
+                        Grid.Row="2"
+                        Height="28"
+                        Margin="10,6"
+                        Background="Transparent"
+                        BorderBrush="{StaticResource Border1Brush}"
+                        BorderThickness="1"
+                        Command="{Binding AddGroupCommand}"
+                        Cursor="Hand"
+                        ToolTip="Créer un nouveau groupe">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="5">
+                                    <StackPanel
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Orientation="Horizontal">
+                                        <Image
+                                            Width="13"
+                                            Height="13"
+                                            Margin="0,0,5,0"
+                                            Opacity="0.6"
+                                            Source="/Resources/Icons/add-folder.png" />
+                                        <TextBlock
+                                            FontSize="11"
+                                            Foreground="{StaticResource Text3Brush}"
+                                            Text="Nouveau groupe" />
+                                    </StackPanel>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#0D378ADD" />
+                                        <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
                 </Grid>
             </Border>
 
-            <!--  Séparateur vertical  -->
+            <!--  Séparateur  -->
             <Border Grid.Column="1" Background="{StaticResource BorderBrush_}" />
 
-            <!--
-                ── DataGrid des entrées ─────────────────────────────
-                SelectedItem lié à SelectedEntry → active/désactive
-                les boutons Edit, Delete, Copy, etc. via CanEditEntry()
-                ────────────────────────────────────────────────────────
-            -->
+            <!--  DataGrid  -->
             <Grid Grid.Column="2" Background="{StaticResource ContentBgBrush}">
+
+                <!--  Le DataGrid est masqué quand aucune base n'est ouverte  -->
                 <DataGrid
+                    AutoGenerateColumns="False"
+                    CanUserAddRows="False"
+                    CanUserDeleteRows="False"
                     IsReadOnly="True"
                     ItemsSource="{Binding Entries}"
                     SelectedItem="{Binding SelectedEntry}"
-                    Style="{StaticResource VaultGrid}">
+                    Style="{StaticResource VaultGrid}"
+                    Visibility="{Binding IsDatabaseOpen, Converter={StaticResource BoolToVis}}">
+
                     <DataGrid.Columns>
-                        <!--  Favori  -->
-                        <DataGridTextColumn
-                            Width="26"
-                            Binding="{Binding IsFavorite}"
-                            Header="★" />
-                        <!--  Titre  -->
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Title}"
-                            Header="Titre" />
-                        <!--  Identifiant  -->
+
+                        <!--  ── Favori ────────────────────────────────────────────  -->
+                        <DataGridTemplateColumn
+                            Width="auto"
+                            CanUserResize="False"
+                            Header="★">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Image
+                                        Width="13"
+                                        Height="13"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                        <Image.Style>
+                                            <Style TargetType="Image">
+                                                <Setter Property="Source" Value="/Resources/Icons/star_empty_13.png" />
+                                                <Setter Property="Opacity" Value="0.35" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsFavorite, Mode=OneWay}" Value="True">
+                                                        <Setter Property="Source" Value="/Resources/Icons/star_13.png" />
+                                                        <Setter Property="Opacity" Value="1" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!--  ── Titre + badge "Expire bientôt" ───────────────────  -->
+                        <DataGridTemplateColumn Width="*" Header="Titre">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                        <TextBlock
+                                            Margin="10,0,0,0"
+                                            VerticalAlignment="Center"
+                                            FontSize="12"
+                                            Text="{Binding Title, Mode=OneWay}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Foreground" Value="{StaticResource Text1Brush}" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsExpiringSoon, Mode=OneWay}" Value="True">
+                                                            <Setter Property="Foreground" Value="{StaticResource RedBrush}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                        <Border
+                                            Margin="6,0,0,0"
+                                            Padding="5,1"
+                                            VerticalAlignment="Center"
+                                            Background="#1AEF4444"
+                                            BorderBrush="#4DEF4444"
+                                            BorderThickness="1"
+                                            CornerRadius="5">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsExpiringSoon, Mode=OneWay}" Value="True">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <TextBlock
+                                                FontSize="9"
+                                                FontWeight="Medium"
+                                                Foreground="{StaticResource RedBrush}"
+                                                Text="Expire bientôt" />
+                                        </Border>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!--  ── Identifiant ───────────────────────────────────────  -->
                         <DataGridTextColumn
                             Width="160"
-                            Binding="{Binding Username}"
+                            Binding="{Binding Username, Mode=OneWay}"
                             Header="Identifiant" />
-                        <!--  Mot de passe masqué  -->
+
+                        <!--  ── Mot de passe masqué ───────────────────────────────  -->
                         <DataGridTextColumn
                             Width="110"
-                            Binding="{Binding Password, Converter={StaticResource MaskPass}}"
+                            Binding="{Binding Password, Mode=OneWay, Converter={StaticResource MaskPass}}"
                             Header="Mot de passe" />
-                        <!--  Date de modification  -->
+
+                        <!--  ── Force — badge coloré ──────────────────────────────  -->
+                        <!--
+                            StrengthScore (int 0-100) et StrengthLabel (string) sont calculés
+                            automatiquement par PasswordStrengthHelper.Evaluate(Password).
+                            L'enum Strength n'est PAS utilisé car il n'est jamais auto-mis à jour.
+                        -->
+                        <DataGridTemplateColumn Width="auto" Header="Force">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border
+                                        Margin="6,0"
+                                        Padding="7,2"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Background="{Binding StrengthScore, Mode=OneWay, Converter={StaticResource StrBgColor}}"
+                                        CornerRadius="8">
+                                        <TextBlock
+                                            FontSize="9"
+                                            FontWeight="SemiBold"
+                                            Foreground="{Binding StrengthScore, Mode=OneWay, Converter={StaticResource StrColor}}"
+                                            
+                                            Text="{Binding StrengthLabel, Mode=OneWay}" />
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!--  ── Date de modification ──────────────────────────────  -->
                         <DataGridTextColumn
-                            Width="90"
-                            Binding="{Binding ModifiedAt, Converter={StaticResource DateFmt}}"
-                            Header="Modifié" />
+                            Width="200"
+                            Binding="{Binding ModifiedAt, Mode=OneWay, Converter={StaticResource DateFmt}}"
+                            Header="Modifié le" />
+
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <!--  Message affiché quand aucune base n'est ouverte  -->
-                <TextBlock
+                <!--
+                    ══ Écran vide ═══════════════════════════════════════════════
+                    Visible uniquement quand IsDatabaseOpen = False
+                    Utilise ConverterParameter=Invert : False → Visible
+                    ═══════════════════════════════════════════════════════════════
+                -->
+                <StackPanel
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    FontSize="13"
-                    Foreground="{StaticResource Text3Brush}"
                     Visibility="{Binding IsDatabaseOpen, Converter={StaticResource BoolToVis}, ConverterParameter=Invert}">
-                    Créez ou ouvrez une base de données pour commencer.
-                </TextBlock>
+                    <Image
+                        Width="48"
+                        Height="48"
+                        Margin="0,0,0,12"
+                        HorizontalAlignment="Center"
+                        Opacity="0.12"
+                        Source="/Resources/Icons/database_48.png" />
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        FontSize="13"
+                        Foreground="{StaticResource Text3Brush}"
+                        Text="Créez ou ouvrez une base de données pour commencer." />
+                    <StackPanel
+                        Margin="0,12,0,0"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                        <Button
+                            Height="30"
+                            Margin="0,0,8,0"
+                            Padding="14,0"
+                            Command="{Binding NewDatabaseCommand}"
+                            Cursor="Hand">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border
+                                        Padding="{TemplateBinding Padding}"
+                                        Background="#185FA5"
+                                        CornerRadius="5">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image
+                                                Width="14"
+                                                Height="14"
+                                                Margin="0,0,6,0"
+                                                Source="/Resources/Icons/new_file_18.png" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="12"
+                                                Foreground="White"
+                                                Text="Nouvelle base" />
+                                        </StackPanel>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                        <Button
+                            Height="30"
+                            Padding="14,0"
+                            Command="{Binding OpenDatabaseCommand}"
+                            Cursor="Hand">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border
+                                        Padding="{TemplateBinding Padding}"
+                                        Background="Transparent"
+                                        BorderBrush="#26378ADD"
+                                        BorderThickness="1"
+                                        CornerRadius="5">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image
+                                                Width="14"
+                                                Height="14"
+                                                Margin="0,0,6,0"
+                                                Source="/Resources/Icons/open_folder_18.png" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="12"
+                                                Foreground="{StaticResource Text2Brush}"
+                                                Text="Ouvrir" />
+                                        </StackPanel>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+
             </Grid>
+
+
         </Grid>
 
-        <!--  ══ Barre de statut ════════════════════════════════════════  -->
+        <!--  ══ STATUS BAR ════════════════════════════════════════════  -->
         <Border
-            Grid.Row="2"
+            Grid.Row="3"
             Background="{StaticResource SidebarBgBrush}"
             BorderBrush="{StaticResource BorderBrush_}"
             BorderThickness="0,1,0,0">
             <Grid>
-                <!--  Gauche : message de statut + countdown presse-papier  -->
                 <StackPanel
                     Margin="12,0"
                     VerticalAlignment="Center"
                     Orientation="Horizontal">
+                    <Image
+                        Width="10"
+                        Height="10"
+                        Margin="0,0,5,0"
+                        Opacity="0.45"
+                        Source="/Resources/Icons/info.png" />
                     <TextBlock
                         FontSize="10"
                         Foreground="{StaticResource Text3Brush}"
                         Text="{Binding StatusText}" />
-                    <!--  Countdown visible seulement quand > 0  -->
-                    <TextBlock
+                    <StackPanel
                         Margin="10,0,0,0"
-                        FontSize="10"
-                        Foreground="{StaticResource AmberBrush}"
+                        Orientation="Horizontal"
                         Visibility="{Binding IsClipboardCountingDown, Converter={StaticResource BoolToVis}}">
-                        <Run Text="🔒 Presse-papier effacé dans " />
-                        <Run Text="{Binding ClipboardCountdown}" />
-                        <Run Text=" s" />
-                    </TextBlock>
+                        <Image
+                            Width="10"
+                            Height="10"
+                            Margin="0,0,4,0"
+                            Opacity="0.7"
+                            Source="/Resources/Icons/key.png" />
+                        <TextBlock FontSize="10" Foreground="{StaticResource AmberBrush}">
+                            <Run Text="Presse-papier effacé dans " />
+                            <Run Text="{Binding ClipboardCountdown, Mode=OneWay}" />
+                            <Run Text=" s" />
+                        </TextBlock>
+                    </StackPanel>
                 </StackPanel>
-
-                <!--  Droite : nb entrées / état verrou / version  -->
                 <StackPanel
                     Margin="12,0"
                     HorizontalAlignment="Right"
@@ -613,28 +1090,45 @@
                         Margin="0,0,12,0"
                         FontSize="10"
                         Foreground="{StaticResource AccentBrush}"
-                        Text="{Binding Entries.Count, StringFormat='{}{0} entrées'}"
+                        Text="{Binding Entries.Count, Mode=OneWay, StringFormat='{}{0} entrées'}"
                         Visibility="{Binding IsDatabaseOpen, Converter={StaticResource BoolToVis}}" />
-                    <!--  État déverrouillé  -->
-                    <TextBlock
+                    <StackPanel
                         Margin="0,0,12,0"
-                        FontSize="10"
-                        Foreground="{StaticResource TealLightBrush}"
-                        Text="🔓 Déverrouillé"
-                        Visibility="{Binding IsLocked, Converter={StaticResource BoolToVis}, ConverterParameter=Invert}" />
-                    <!--  État verrouillé  -->
-                    <TextBlock
+                        Orientation="Horizontal"
+                        Visibility="{Binding IsLocked, Converter={StaticResource BoolToVis}, ConverterParameter=Invert}">
+                        <Image
+                            Width="10"
+                            Height="10"
+                            Margin="0,0,4,0"
+                            Source="/Resources/Icons/unlock.png" />
+                        <TextBlock
+                            FontSize="10"
+                            Foreground="{StaticResource TealLightBrush}"
+                            Text="Déverrouillé" />
+                    </StackPanel>
+                    <StackPanel
                         Margin="0,0,12,0"
-                        FontSize="10"
-                        Foreground="{StaticResource RedBrush}"
-                        Text="🔒 Verrouillé"
-                        Visibility="{Binding IsLocked, Converter={StaticResource BoolToVis}}" />
-                    <TextBlock
+                        Orientation="Horizontal"
+                        Visibility="{Binding IsLocked, Converter={StaticResource BoolToVis}}">
+                        <Image
+                            Width="10"
+                            Height="10"
+                            Margin="0,0,4,0"
+                            Source="/Resources/Icons/lock.png" />
+                        <TextBlock
+                            FontSize="10"
+                            Foreground="{StaticResource RedBrush}"
+                            Text="Verrouillé" />
+                    </StackPanel>
+                    <Border
                         Padding="6,1"
                         Background="{StaticResource InputBgBrush}"
-                        FontSize="10"
-                        Foreground="{StaticResource Text3Brush}"
-                        Text="VaultIQ v1.0" />
+                        CornerRadius="4">
+                        <TextBlock
+                            FontSize="10"
+                            Foreground="{StaticResource Text3Brush}"
+                            Text="VaultIQ v1.0" />
+                    </Border>
                 </StackPanel>
             </Grid>
         </Border>

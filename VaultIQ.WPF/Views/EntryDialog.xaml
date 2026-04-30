@@ -8,7 +8,7 @@
     Background="Transparent"
     ResizeMode="NoResize"
     SizeToContent="Height"
-    WindowStartupLocation="CenterOwner"
+    WindowStartupLocation="CenterScreen"
     WindowStyle="None">
 
     <Window.Resources>
@@ -192,6 +192,142 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+        <!--  ── FormComboBox — même style que FormInput ───────────  -->
+        <Style x:Key="FormComboBox" TargetType="ComboBox">
+            <Setter Property="Height" Value="34" />
+            <Setter Property="Background" Value="{StaticResource Panel}" />
+            <Setter Property="Foreground" Value="{StaticResource Text1}" />
+            <Setter Property="BorderBrush" Value="{StaticResource Border1}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Padding" Value="10,0,0,0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Border
+                            x:Name="MainBorder"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6">
+                            <Grid>
+                                <!--  Flèche personnalisée  -->
+                                <Path
+                                    x:Name="Arrow"
+                                    Margin="0,0,10,0"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    Data="M 0 0 L 5 5 L 10 0"
+                                    Fill="Transparent"
+                                    IsHitTestVisible="False"
+                                    Stroke="#47378ADD"
+                                    StrokeThickness="1.5" />
+                                <!--  Texte sélectionné  -->
+                                <ContentPresenter
+                                    x:Name="ContentSite"
+                                    Margin="{TemplateBinding Padding}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Content="{TemplateBinding SelectionBoxItem}"
+                                    ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                    ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                    IsHitTestVisible="False" />
+                                <!--  Zone cliquable invisible  -->
+                                <ToggleButton
+                                    x:Name="ToggleButton"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    ClickMode="Press"
+                                    Focusable="False"
+                                    IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                                    <ToggleButton.Template>
+                                        <ControlTemplate TargetType="ToggleButton">
+                                            <Border Background="Transparent" />
+                                        </ControlTemplate>
+                                    </ToggleButton.Template>
+                                </ToggleButton>
+                                <!--  Popup liste déroulante  -->
+                                <Popup
+                                    x:Name="Popup"
+                                    AllowsTransparency="True"
+                                    Focusable="False"
+                                    IsOpen="{TemplateBinding IsDropDownOpen}"
+                                    Placement="Bottom"
+                                    PopupAnimation="Slide">
+                                    <Border
+                                        x:Name="DropDownBorder"
+                                        MinWidth="{TemplateBinding ActualWidth}"
+                                        MaxHeight="200"
+                                        Background="#0F2035"
+                                        BorderBrush="#47378ADD"
+                                        BorderThickness="1"
+                                        CornerRadius="6">
+                                        <Border.Effect>
+                                            <DropShadowEffect
+                                                BlurRadius="20"
+                                                Opacity="0.6"
+                                                ShadowDepth="4"
+                                                Color="#000000" />
+                                        </Border.Effect>
+                                        <ScrollViewer Margin="2">
+                                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                        </ScrollViewer>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="MainBorder" Property="BorderBrush" Value="{StaticResource Accent}" />
+                            </Trigger>
+                            <Trigger Property="IsDropDownOpen" Value="True">
+                                <Setter TargetName="MainBorder" Property="BorderBrush" Value="{StaticResource Accent}" />
+                                <Setter TargetName="Arrow" Property="Stroke" Value="{StaticResource Accent}" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="MainBorder" Property="BorderBrush" Value="#47378ADD" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <!--  Style des items dans la liste  -->
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="ComboBoxItem">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Foreground" Value="{StaticResource Text2}" />
+                        <Setter Property="Padding" Value="10,6" />
+                        <Setter Property="FontSize" Value="12" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ComboBoxItem">
+                                    <Border
+                                        x:Name="ItemBorder"
+                                        Margin="2,1"
+                                        Padding="{TemplateBinding Padding}"
+                                        Background="{TemplateBinding Background}"
+                                        CornerRadius="4">
+                                        <ContentPresenter VerticalAlignment="Center" />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="ItemBorder" Property="Background" Value="#1E378ADD" />
+                                            <Setter Property="Foreground" Value="{StaticResource Text1}" />
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="ItemBorder" Property="Background" Value="#2E378ADD" />
+                                            <Setter Property="Foreground" Value="{StaticResource Accent}" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <Border
@@ -242,19 +378,44 @@
                             FontSize="11"
                             Foreground="#8CFFFFFF" />
                     </StackPanel>
-                    <!--  Favorite toggle  -->
+                    <!--  Favorite toggle — image star  -->
                     <ToggleButton
                         x:Name="FavoriteToggle"
+                        Width="32"
+                        Height="32"
                         Background="Transparent"
                         BorderThickness="0"
                         Checked="FavoriteToggle_Changed"
-                        Content="☆"
                         Cursor="Hand"
                         DockPanel.Dock="Right"
-                        FontSize="20"
-                        Foreground="#80FFFFFF"
                         ToolTip="Marquer comme favori"
-                        Unchecked="FavoriteToggle_Changed" />
+                        Unchecked="FavoriteToggle_Changed">
+                        <ToggleButton.Template>
+                            <ControlTemplate TargetType="ToggleButton">
+                                <Border
+                                    Padding="6"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="6">
+                                    <Image
+                                        x:Name="StarImg"
+                                        Width="18"
+                                        Height="18"
+                                        Opacity="0.55"
+                                        Source="/Resources/Icons/star_empty_18.png" />
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsChecked" Value="True">
+                                        <Setter TargetName="StarImg" Property="Source" Value="/Resources/Icons/star_18.png" />
+                                        <Setter TargetName="StarImg" Property="Opacity" Value="1" />
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#1AFFFFFF" />
+                                        <Setter TargetName="StarImg" Property="Opacity" Value="0.85" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </ToggleButton.Template>
+                    </ToggleButton>
                 </DockPanel>
             </Border>
 
@@ -447,13 +608,8 @@
                         <TextBlock Style="{StaticResource FieldLabel}" Text="GROUPE" />
                         <ComboBox
                             x:Name="GroupCombo"
-                            Height="34"
-                            Padding="10,0"
-                            Background="{StaticResource Panel}"
-                            BorderBrush="{StaticResource Border1}"
-                            FontSize="12"
-                            Foreground="{StaticResource Text2}"
-                            SelectionChanged="GroupCombo_SelectionChanged" />
+                            SelectionChanged="GroupCombo_SelectionChanged"
+                            Style="{StaticResource FormComboBox}" />
                     </StackPanel>
 
                 </StackPanel>
@@ -545,7 +701,6 @@
                                     Maximum="64"
                                     Minimum="8"
                                     TickFrequency="1"
-                                    ValueChanged="GenSlider_Changed"
                                     Value="20" />
                             </DockPanel>
 
@@ -558,9 +713,7 @@
                                     <CheckBox
                                         x:Name="ChkUppercase"
                                         Margin="0,0,6,0"
-                                        Checked="GenOption_Changed"
-                                        IsChecked="True"
-                                        Unchecked="GenOption_Changed" />
+                                        IsChecked="True" />
                                     <TextBlock
                                         VerticalAlignment="Center"
                                         FontSize="11"
@@ -571,9 +724,7 @@
                                     <CheckBox
                                         x:Name="ChkLowercase"
                                         Margin="0,0,6,0"
-                                        Checked="GenOption_Changed"
-                                        IsChecked="True"
-                                        Unchecked="GenOption_Changed" />
+                                        IsChecked="True" />
                                     <TextBlock
                                         VerticalAlignment="Center"
                                         FontSize="11"
@@ -584,9 +735,7 @@
                                     <CheckBox
                                         x:Name="ChkDigits"
                                         Margin="0,0,6,0"
-                                        Checked="GenOption_Changed"
-                                        IsChecked="True"
-                                        Unchecked="GenOption_Changed" />
+                                        IsChecked="True" />
                                     <TextBlock
                                         VerticalAlignment="Center"
                                         FontSize="11"
@@ -597,9 +746,7 @@
                                     <CheckBox
                                         x:Name="ChkSymbols"
                                         Margin="0,0,6,0"
-                                        Checked="GenOption_Changed"
-                                        IsChecked="False"
-                                        Unchecked="GenOption_Changed" />
+                                        IsChecked="False" />
                                     <TextBlock
                                         VerticalAlignment="Center"
                                         FontSize="11"
@@ -613,9 +760,7 @@
                                 <CheckBox
                                     x:Name="ChkNoAmbiguous"
                                     Margin="0,0,6,0"
-                                    Checked="GenOption_Changed"
-                                    IsChecked="True"
-                                    Unchecked="GenOption_Changed" />
+                                    IsChecked="True" />
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     FontSize="11"

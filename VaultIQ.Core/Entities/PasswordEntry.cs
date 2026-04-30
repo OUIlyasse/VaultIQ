@@ -10,7 +10,7 @@ public class PasswordEntry
     public string Title { get; set; } = string.Empty;
     public string Username { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
-    public string Url { get; set; } = string.Empty;
+    public string? Url { get; set; } = string.Empty;
     public string Notes { get; set; } = string.Empty;
     public bool IsFavorite { get; set; }
     public DateTime? ExpiresAt { get; set; }
@@ -19,6 +19,7 @@ public class PasswordEntry
 
     // Calculé à la volée — pas stocké
     public PasswordStrength Strength { get; set; }
+    public string StrengthLabel => PasswordStrengthHelper.Label(StrengthScore);
 
     public bool IsExpiringSoon => ExpiresAt.HasValue && ExpiresAt.Value <= DateTime.Now.AddDays(30);
 

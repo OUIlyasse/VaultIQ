@@ -8,7 +8,7 @@
     Background="Transparent"
     ResizeMode="NoResize"
     SizeToContent="Height"
-    WindowStartupLocation="CenterOwner"
+    WindowStartupLocation="CenterScreen"
     WindowStyle="None">
 
     <Window.Resources>
@@ -192,6 +192,7 @@
                     <Border
                         Margin="0,0,0,10"
                         Padding="14,10"
+                        Height="150"
                         Background="{StaticResource Mid}"
                         BorderBrush="{StaticResource Border2}"
                         BorderThickness="1"
@@ -320,7 +321,6 @@
                                 Maximum="128"
                                 Minimum="4"
                                 TickFrequency="1"
-                                ValueChanged="LengthSlider_Changed"
                                 Value="20" />
                         </DockPanel>
 
@@ -341,9 +341,7 @@
                                     <CheckBox
                                         x:Name="ChkUppercase"
                                         Margin="0,0,8,0"
-                                        Checked="Option_Changed"
-                                        IsChecked="True"
-                                        Unchecked="Option_Changed" />
+                                        IsChecked="True" />
                                     <TextBlock Style="{StaticResource OptionLabel}" Text="Majuscules" />
                                     <TextBlock
                                         VerticalAlignment="Center"
@@ -356,9 +354,7 @@
                                     <CheckBox
                                         x:Name="ChkLowercase"
                                         Margin="0,0,8,0"
-                                        Checked="Option_Changed"
-                                        IsChecked="True"
-                                        Unchecked="Option_Changed" />
+                                        IsChecked="True" />
                                     <TextBlock Style="{StaticResource OptionLabel}" Text="Minuscules" />
                                     <TextBlock
                                         VerticalAlignment="Center"
@@ -373,9 +369,7 @@
                                     <CheckBox
                                         x:Name="ChkDigits"
                                         Margin="0,0,8,0"
-                                        Checked="Option_Changed"
-                                        IsChecked="True"
-                                        Unchecked="Option_Changed" />
+                                        IsChecked="True" />
                                     <TextBlock Style="{StaticResource OptionLabel}" Text="Chiffres" />
                                     <TextBlock
                                         VerticalAlignment="Center"
@@ -388,9 +382,7 @@
                                     <CheckBox
                                         x:Name="ChkSymbols"
                                         Margin="0,0,8,0"
-                                        Checked="Option_Changed"
-                                        IsChecked="False"
-                                        Unchecked="Option_Changed" />
+                                        IsChecked="False" />
                                     <TextBlock Style="{StaticResource OptionLabel}" Text="Symboles" />
                                     <TextBlock
                                         VerticalAlignment="Center"
@@ -407,9 +399,7 @@
                             <CheckBox
                                 x:Name="ChkNoAmbiguous"
                                 Margin="0,0,8,0"
-                                Checked="Option_Changed"
-                                IsChecked="True"
-                                Unchecked="Option_Changed" />
+                                IsChecked="True" />
                             <TextBlock Style="{StaticResource OptionLabel}">
                                 Exclure les caractères ambigus<Run
                                     FontFamily="Consolas"

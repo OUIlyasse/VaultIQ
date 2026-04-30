@@ -9,6 +9,38 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Icons\add_entry_18.png" />
+    <None Remove="Resources\Icons\App.ico" />
+    <None Remove="Resources\Icons\database_48.png" />
+    <None Remove="Resources\Icons\dice_18.png" />
+    <None Remove="Resources\Icons\duplicate_18.png" />
+    <None Remove="Resources\Icons\edit_18.png" />
+    <None Remove="Resources\Icons\eye_16.png" />
+    <None Remove="Resources\Icons\eye_off_16.png" />
+    <None Remove="Resources\Icons\globe_18.png" />
+    <None Remove="Resources\Icons\key_18.png" />
+    <None Remove="Resources\Icons\lock_18.png" />
+    <None Remove="Resources\Icons\new_file_18.png" />
+    <None Remove="Resources\Icons\open_folder_18.png" />
+    <None Remove="Resources\Icons\save_18.png" />
+    <None Remove="Resources\Icons\search_14.png" />
+    <None Remove="Resources\Icons\star_13.png" />
+    <None Remove="Resources\Icons\star_18.png" />
+    <None Remove="Resources\Icons\star_empty_13.png" />
+    <None Remove="Resources\Icons\star_empty_18.png" />
+    <None Remove="Resources\Icons\trash_18.png" />
+    <None Remove="Resources\Icons\unlock_18.png" />
+    <None Remove="Resources\Icons\user_18.png" />
+    <None Remove="Resources\Icons\VaultIQ_128x128.svg" />
+    <None Remove="Resources\Icons\VaultIQ_16x16.svg" />
+    <None Remove="Resources\Icons\VaultIQ_256x256.svg" />
+    <None Remove="Resources\Icons\VaultIQ_48x48.svg" />
+    <None Remove="Resources\Icons\VaultIQ_favicon_32x32.svg" />
+    <None Remove="Resources\Icons\VaultIQ_tileimage_150x150.svg" />
+    <None Remove="Resources\Icons\VaultIQ_tray_icon.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
   </ItemGroup>
 
@@ -18,6 +50,96 @@
 
   <ItemGroup>
     <Folder Include="Controls\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Icons\add_entry_18.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\App.ico">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\database_48.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\dice_18.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\duplicate_18.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\edit_18.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\eye_16.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\eye_off_16.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\globe_18.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\key_18.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\lock_18.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\new_file_18.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\open_folder_18.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\save_18.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\search_14.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\star_13.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\star_18.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\star_empty_13.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\star_empty_18.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\trash_18.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\unlock_18.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\user_18.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\VaultIQ_128x128.svg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\VaultIQ_16x16.svg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\VaultIQ_256x256.svg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\VaultIQ_48x48.svg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\VaultIQ_favicon_32x32.svg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\VaultIQ_tileimage_150x150.svg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icons\VaultIQ_tray_icon.svg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

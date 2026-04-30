@@ -10,6 +10,10 @@ public partial class NewDatabaseDialog : Window
 {
     private readonly NewDatabaseViewModel _vm;
 
+    // ── État interne du toggle œil ────────────────────────────────
+    private bool _masterVisible = false;
+    private bool _confirmVisible = false;
+
     public NewDatabaseDialog()
     {
         InitializeComponent();
@@ -25,78 +29,167 @@ public partial class NewDatabaseDialog : Window
         };
     }
 
-    // ── Public results ────────────────────────────────────────────
+    // ── Résultats lus par l'appelant (MainViewModel) ──────────────
     public string DatabaseName => _vm.DatabaseName;
-
     public string MasterPassword => _vm.MasterPassword;
     public string FilePath => _vm.FilePath;
     public bool EnablePin => _vm.EnablePin;
     public bool EnableRecovery => _vm.EnableRecovery;
 
-    // ── Header drag ───────────────────────────────────────────────
-    private void Header_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) => DragMove();
+    // ── Drag header ───────────────────────────────────────────────
+    private void Header_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        => DragMove();
 
-    // ── Password change handlers ──────────────────────────────────
+    // ══════════════════════════════════════════════════════════════
+    //  TOGGLE ŒIL — MOT DE PASSE PRINCIPAL
+    // ══════════════════════════════════════════════════════════════
+    private void EyeBtn1_Click(object sender, RoutedEventArgs e)
+    {
+        _masterVisible = !_masterVisible;
+
+        if (_masterVisible)
+        {
+            // Passer de PasswordBox → TextBox clair
+            MasterClearBox.Text = MasterPasswordBox.Password;
+            MasterClearBox.Visibility = Visibility.Visible;
+            MasterPasswordBox.Visibility = Visibility.Collapsed;
+            EyeIcon1.Source = new System.Windows.Media.Imaging.BitmapImage(
+                new Uri("/Resources/Icons/eye_off_16.png", UriKind.Relative));
+        }
+        else
+        {
+            // Repasser à PasswordBox masqué
+            MasterPasswordBox.Password = MasterClearBox.Text;
+            MasterPasswordBox.Visibility = Visibility.Visible;
+            MasterClearBox.Visibility = Visibility.Collapsed;
+            EyeIcon1.Source = new System.Windows.Media.Imaging.BitmapImage(
+                new Uri("/Resources/Icons/eye_16.png", UriKind.Relative));
+        }
+
+        MasterPasswordBox.Focus();
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    //  TOGGLE ŒIL — CONFIRMATION
+    // ══════════════════════════════════════════════════════════════
+    private void EyeBtn2_Click(object sender, RoutedEventArgs e)
+    {
+        _confirmVisible = !_confirmVisible;
+
+        if (_confirmVisible)
+        {
+            ConfirmClearBox.Text = ConfirmPasswordBox.Password;
+            ConfirmClearBox.Visibility = Visibility.Visible;
+            ConfirmPasswordBox.Visibility = Visibility.Collapsed;
+            EyeIcon2.Source = new System.Windows.Media.Imaging.BitmapImage(
+                new Uri("/Resources/Icons/eye_off_16.png", UriKind.Relative));
+        }
+        else
+        {
+            ConfirmPasswordBox.Password = ConfirmClearBox.Text;
+            ConfirmPasswordBox.Visibility = Visibility.Visible;
+            ConfirmClearBox.Visibility = Visibility.Collapsed;
+            EyeIcon2.Source = new System.Windows.Media.Imaging.BitmapImage(
+                new Uri("/Resources/Icons/eye_16.png", UriKind.Relative));
+        }
+
+        ConfirmPasswordBox.Focus();
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    //  CHANGEMENTS MDP — synchronisation VM
+    // ══════════════════════════════════════════════════════════════
+
+    // PasswordBox principal (mode masqué)
     private void MasterPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
     {
         _vm.MasterPassword = MasterPasswordBox.Password;
         _vm.UpdateStrength();
+        SyncConfirmValidation();
     }
 
+    // TextBox principal (mode clair)
+    private void MasterClearBox_TextChanged(object sender,
+        System.Windows.Controls.TextChangedEventArgs e)
+    {
+        _vm.MasterPassword = MasterClearBox.Text;
+        _vm.UpdateStrength();
+        SyncConfirmValidation();
+    }
+
+    // PasswordBox confirmation (mode masqué)
     private void ConfirmPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
     {
         _vm.ConfirmPassword = ConfirmPasswordBox.Password;
+        SyncConfirmValidation();
     }
 
-    // ── Eye toggle (master password) ─────────────────────────────
-    private void EyeBtn1_Click(object sender, RoutedEventArgs e)
+    // TextBox confirmation (mode clair)
+    private void ConfirmClearBox_TextChanged(object sender,
+        System.Windows.Controls.TextChangedEventArgs e)
     {
-        // PasswordBox doesn't support plain-text switch natively;
-        // swap with a TextBox overlay (same approach as LoginDialog)
+        _vm.ConfirmPassword = ConfirmClearBox.Text;
+        SyncConfirmValidation();
     }
 
-    // ── Strength bar ─────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════════════
+    //  BARRE DE FORCE
+    // ══════════════════════════════════════════════════════════════
     private void UpdateStrengthBar()
     {
         double ratio = Math.Clamp(_vm.PasswordStrength / 100.0, 0, 1);
-        StrengthBarFill.Width = StrengthBarContainer.ActualWidth * ratio;
 
-        var (color, label) = _vm.PasswordStrength switch
+        // La largeur doit être calculée après que le Grid ait sa taille réelle
+        StrengthBarContainer.UpdateLayout();
+        double containerWidth = StrengthBarContainer.ActualWidth;
+        StrengthBarFill.Width = containerWidth * ratio;
+
+        var (hex, label) = _vm.PasswordStrength switch
         {
             >= 80 => ("#22C55E", $"Très fort — {_vm.PasswordStrength}/100"),
             >= 60 => ("#F59E0B", $"Moyen — {_vm.PasswordStrength}/100"),
-            _ => ("#EF4444", $"Faible — {_vm.PasswordStrength}/100")
+            > 0 => ("#EF4444", $"Faible — {_vm.PasswordStrength}/100"),
+            _ => ("#3D6080", string.Empty)
         };
 
-        StrengthBarFill.Background = new SolidColorBrush(
-            (Color)ColorConverter.ConvertFromString(color));
+        var brush = new SolidColorBrush(
+            (Color)ColorConverter.ConvertFromString(hex));
+
+        StrengthBarFill.Background = brush;
         StrengthLabel.Text = label;
-        StrengthLabel.Foreground = StrengthBarFill.Background;
-        EntropyLabel.Text = $"Entropie ≈ {_vm.EntropyBits} bits";
+        StrengthLabel.Foreground = brush;
+        EntropyLabel.Text = _vm.PasswordStrength > 0
+            ? $"Entropie ≈ {_vm.EntropyBits} bits"
+            : string.Empty;
     }
 
-    // ── Confirm match indicator ───────────────────────────────────
-    private void UpdateConfirmIndicator()
+    // ══════════════════════════════════════════════════════════════
+    //  INDICATEUR CORRESPONDANCE
+    // ══════════════════════════════════════════════════════════════
+    private void SyncConfirmValidation()
     {
-        if (_vm.PasswordsMatch)
-        {
-            ConfirmMatchIcon.Visibility = Visibility.Visible;
-            ConfirmErrorText.Visibility = Visibility.Collapsed;
-        }
-        else if (!string.IsNullOrEmpty(_vm.ConfirmPassword))
-        {
-            ConfirmMatchIcon.Visibility = Visibility.Collapsed;
-            ConfirmErrorText.Text = "Les mots de passe ne correspondent pas.";
-            ConfirmErrorText.Visibility = Visibility.Visible;
-        }
-        else
-        {
-            ConfirmMatchIcon.Visibility = Visibility.Collapsed;
-            ConfirmErrorText.Visibility = Visibility.Collapsed;
-        }
+        // Récupère le texte de confirmation selon le mode actif
+        string confirm = _confirmVisible
+            ? ConfirmClearBox.Text
+            : ConfirmPasswordBox.Password;
+
+        string master = _masterVisible
+            ? MasterClearBox.Text
+            : MasterPasswordBox.Password;
+
+        bool empty = string.IsNullOrEmpty(confirm);
+        bool match = !empty && confirm == master;
+
+        ConfirmMatchIcon.Visibility = match ? Visibility.Visible : Visibility.Collapsed;
+        ConfirmErrorText.Visibility = (!empty && !match) ? Visibility.Visible : Visibility.Collapsed;
+        ConfirmErrorText.Text = "Les mots de passe ne correspondent pas.";
     }
 
-    // ── Browse ────────────────────────────────────────────────────
+    private void UpdateConfirmIndicator() => SyncConfirmValidation();
+
+    // ══════════════════════════════════════════════════════════════
+    //  PARCOURIR
+    // ══════════════════════════════════════════════════════════════
     private void BrowseBtn_Click(object sender, RoutedEventArgs e)
     {
         var dlg = new SaveFileDialog
@@ -110,14 +203,26 @@ public partial class NewDatabaseDialog : Window
             _vm.FilePath = dlg.FileName;
     }
 
-    // ── Buttons ───────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════════════
+    //  BOUTONS CRÉER / ANNULER
+    // ══════════════════════════════════════════════════════════════
     private void CreateBtn_Click(object sender, RoutedEventArgs e)
     {
+        // S'assurer que le VM a le mot de passe du champ actif
+        _vm.MasterPassword = _masterVisible
+            ? MasterClearBox.Text
+            : MasterPasswordBox.Password;
+        _vm.ConfirmPassword = _confirmVisible
+            ? ConfirmClearBox.Text
+            : ConfirmPasswordBox.Password;
+
         if (!_vm.Validate(out string error))
         {
-            MessageBox.Show(error, "VaultIQ", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show(error, "VaultIQ",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
+
         DialogResult = true;
     }
 
